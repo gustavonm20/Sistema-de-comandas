@@ -107,11 +107,16 @@ Sistema-de-comandas/
 
 ## Planejamento
 
+- [Quadro Kanban do projeto](https://github.com/users/gustavonm20/projects/2/views/4)
 - [Roadmap do projeto](ROADMAP.md)
 - [Organização sugerida do Kanban](docs/KANBAN.md)
 - [Situação do protótipo no Figma](docs/FIGMA_STATUS.md)
 - [Regras de negócio](docs/BUSINESS_RULES.md)
 - [Issues do projeto](https://github.com/gustavonm20/Sistema-de-comandas/issues)
+
+## Acompanhamento rápido
+
+O andamento do projeto deve ser acompanhado pelo Kanban e pelas issues. O `ROADMAP.md` apresenta a ordem geral das fases, enquanto cada issue contém escopo, dependências e critérios de aceitação.
 
 ## Contribuição
 

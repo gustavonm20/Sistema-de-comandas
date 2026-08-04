@@ -19,6 +19,7 @@ Closes #
 - [ ] Os testes relevantes foram adicionados ou atualizados.
 - [ ] A documentação foi atualizada quando necessário.
 - [ ] Mudanças visuais seguem o protótipo do Figma.
+- [ ] Os commits são pequenos, focados e possuem mensagens descritivas.
 - [ ] Não foram adicionados segredos ou arquivos locais.
 
 ## Evidências

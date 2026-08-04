@@ -323,7 +323,6 @@ def product_view():
 
         pause()
 
-
 # =========================
 # ÁREA DE COMANDAS
 # =========================
@@ -451,3 +450,4 @@ def start_system():
 # Verifica se este é o arquivo principal antes de iniciar o sistema
 if __name__ == "__main__":
     start_system()
+

@@ -97,7 +97,8 @@ Sistema-de-comandas/
 ├── CONTRIBUTING.md
 ├── docs/
 │   ├── BUSINESS_RULES.md
-│   └── FIGMA_STATUS.md
+│   ├── FIGMA_STATUS.md
+│   └── KANBAN.md
 └── .github/
     ├── ISSUE_TEMPLATE/
     │   └── feature_request.md
@@ -107,6 +108,7 @@ Sistema-de-comandas/
 ## Planejamento
 
 - [Roadmap do projeto](ROADMAP.md)
+- [Organização sugerida do Kanban](docs/KANBAN.md)
 - [Situação do protótipo no Figma](docs/FIGMA_STATUS.md)
 - [Regras de negócio](docs/BUSINESS_RULES.md)
 - [Issues do projeto](https://github.com/gustavonm20/Sistema-de-comandas/issues)

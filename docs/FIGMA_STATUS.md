@@ -2,6 +2,8 @@
 
 Arquivo principal: [FluxoPag — Comandas](https://www.figma.com/design/Rau8PgbGwiiJwRo9MHgzMW/Comandas?node-id=0-1)
 
+Última revisão documental: **4 de agosto de 2026**.
+
 ## Telas hi-fi existentes
 
 - Dashboard
@@ -42,6 +44,10 @@ Arquivo principal: [FluxoPag — Comandas](https://www.figma.com/design/Rau8PgbG
 - Conta do estabelecimento
 - Conta com dia em andamento
 - Resumos
+
+## Próxima etapa recomendada
+
+Iniciar pela [issue #5 — Criar fluxo de abertura de caixa](https://github.com/gustavonm20/Sistema-de-comandas/issues/5). Esse fluxo será a base para os estados de operação diária, bloqueio de fechamento e conferência do caixa.
 
 ## Trabalho de design ainda pendente
 

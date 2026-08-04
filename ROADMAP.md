@@ -2,6 +2,10 @@
 
 Este roadmap separa o trabalho de **design**, **fundação técnica**, **MVP** e **qualidade**. As issues são a fonte de acompanhamento detalhado.
 
+## Marco atual
+
+O projeto está na fase de planejamento e prototipação. A próxima entrega recomendada é a [issue #5 — Criar fluxo de abertura de caixa](https://github.com/gustavonm20/Sistema-de-comandas/issues/5), seguida pelas issues de bloqueio e fechamento do dia.
+
 ## Legenda
 
 - ✅ Concluído

@@ -56,6 +56,14 @@ docs: atualizar regras de fechamento do caixa
 test: validar bloqueio de comandas abertas
 ```
 
+### Escopo de cada commit
+
+- Cada commit deve representar uma alteração lógica e fácil de compreender.
+- Evite agrupar arquivos sem relação apenas para reduzir a quantidade de commits.
+- Documentação, configuração, testes e funcionalidades podem usar commits separados.
+- A mensagem deve explicar o resultado da alteração, não apenas citar o nome do arquivo.
+- O projeto deve permanecer executável sempre que possível após cada commit.
+
 ## Código
 
 - Identificadores do código devem ser escritos em inglês.

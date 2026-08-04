@@ -21,6 +21,12 @@ O formato é inspirado em *Keep a Changelog* e o projeto pretende adotar version
 - roadmap com issues de design, backend, frontend, MVP e qualidade;
 - templates de issue e pull request.
 
+### Alterado
+
+- documentação separada por responsabilidade para manter um histórico de commits mais claro;
+- links de acompanhamento centralizados no README;
+- roadmap atualizado com o marco atual e a próxima tarefa recomendada.
+
 ### Planejado
 
 - abertura de caixa com valor inicial;

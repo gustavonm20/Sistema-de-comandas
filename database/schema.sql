@@ -2,12 +2,14 @@ CREATE DATABASE IF NOT EXISTS comandas_db;
 
 USE comandas_db;
 
-CREATE TABLE IF NOT EXISTS categorias (
-    categoria_id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL UNIQUE
+
+CREATE TABLE IF NOT EXISTS categories (
+    category_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE
 );
 
-INSERT IGNORE INTO categorias (nome)
+
+INSERT IGNORE INTO categories (name)
 VALUES
     ('Bebidas'),
     ('Frios'),
@@ -15,50 +17,75 @@ VALUES
     ('Pizzas'),
     ('Sobremesas');
 
-CREATE TABLE IF NOT EXISTS produtos (
-    produto_id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    preco DECIMAL(10,2) NOT NULL,
-    categoria_id INT NOT NULL,
-    ativo BOOLEAN NOT NULL DEFAULT TRUE,
-    CHECK (preco >= 0),
-    FOREIGN KEY (categoria_id)
-        REFERENCES categorias(categoria_id),
-    INDEX idx_produtos_categoria_ativo (categoria_id, ativo)
+
+CREATE TABLE IF NOT EXISTS products (
+    product_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    category_id INT NOT NULL,
+    active BOOLEAN NOT NULL DEFAULT TRUE,
+
+    CHECK (price >= 0),
+
+    FOREIGN KEY (category_id)
+        REFERENCES categories(category_id)
 );
 
-INSERT INTO produtos (nome, preco, categoria_id)
-SELECT 'Coca-Cola', 7.50, categoria_id
-FROM categorias
-WHERE nome = 'Bebidas'
+
+INSERT INTO products (name, price, category_id)
+SELECT
+    'Coca-Cola',
+    7.50,
+    category_id
+FROM categories
+WHERE name = 'Bebidas'
 AND NOT EXISTS (
-    SELECT 1 FROM produtos WHERE nome = 'Coca-Cola'
+    SELECT 1
+    FROM products
+    WHERE name = 'Coca-Cola'
 );
 
-INSERT INTO produtos (nome, preco, categoria_id)
-SELECT 'X-Salada', 22.90, categoria_id
-FROM categorias
-WHERE nome = 'Lanches'
+
+INSERT INTO products (name, price, category_id)
+SELECT
+    'X-Salada',
+    22.90,
+    category_id
+FROM categories
+WHERE name = 'Lanches'
 AND NOT EXISTS (
-    SELECT 1 FROM produtos WHERE nome = 'X-Salada'
+    SELECT 1
+    FROM products
+    WHERE name = 'X-Salada'
 );
 
-INSERT INTO produtos (nome, preco, categoria_id)
-SELECT 'Pudim', 9.00, categoria_id
-FROM categorias
-WHERE nome = 'Sobremesas'
+
+INSERT INTO products (name, price, category_id)
+SELECT
+    'Pudim',
+    9.00,
+    category_id
+FROM categories
+WHERE name = 'Sobremesas'
 AND NOT EXISTS (
-    SELECT 1 FROM produtos WHERE nome = 'Pudim'
+    SELECT 1
+    FROM products
+    WHERE name = 'Pudim'
 );
 
-CREATE TABLE IF NOT EXISTS comandas (
-    comanda_id INT AUTO_INCREMENT PRIMARY KEY,
-    numero_comanda CHAR(4) NOT NULL UNIQUE,
-    ativa BOOLEAN NOT NULL DEFAULT TRUE,
-    CHECK (numero_comanda REGEXP '^[0-9]{4}$')
+
+CREATE TABLE IF NOT EXISTS command_cards (
+    card_id INT AUTO_INCREMENT PRIMARY KEY,
+    card_number CHAR(4) NOT NULL UNIQUE,
+    active BOOLEAN NOT NULL DEFAULT TRUE,
+
+    CHECK (
+        card_number REGEXP '^[0-9]{4}$'
+    )
 );
 
-INSERT IGNORE INTO comandas (numero_comanda)
+
+INSERT IGNORE INTO command_cards (card_number)
 VALUES
     ('0001'),
     ('0002'),
@@ -66,168 +93,292 @@ VALUES
     ('0004'),
     ('0005');
 
-CREATE TABLE IF NOT EXISTS pedidos (
-    pedido_id INT AUTO_INCREMENT PRIMARY KEY,
-    comanda_id INT NOT NULL,
-    status ENUM('aberto', 'fechado') NOT NULL DEFAULT 'aberto',
-    aberto_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    fechado_em DATETIME NULL,
-    comanda_aberta_id INT
+
+CREATE TABLE IF NOT EXISTS orders (
+    order_id INT AUTO_INCREMENT PRIMARY KEY,
+    card_id INT NOT NULL,
+
+    status ENUM(
+        'open',
+        'closed'
+    ) NOT NULL DEFAULT 'open',
+
+    opened_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    closed_at DATETIME NULL,
+
+    open_card_id INT
         GENERATED ALWAYS AS (
             CASE
-                WHEN status = 'aberto' THEN comanda_id
+                WHEN status = 'open' THEN card_id
                 ELSE NULL
             END
         ) STORED,
-    UNIQUE (comanda_aberta_id),
+
+    UNIQUE (open_card_id),
+
+    FOREIGN KEY (card_id)
+        REFERENCES command_cards(card_id),
+
     CHECK (
-        (status = 'aberto' AND fechado_em IS NULL)
+        (status = 'open' AND closed_at IS NULL)
         OR
-        (status = 'fechado' AND fechado_em IS NOT NULL)
-    ),
-    FOREIGN KEY (comanda_id)
-        REFERENCES comandas(comanda_id),
-    INDEX idx_pedidos_status (status)
+        (status = 'closed' AND closed_at IS NOT NULL)
+    )
 );
 
-CREATE TABLE IF NOT EXISTS itens_pedido (
-    item_pedido_id INT AUTO_INCREMENT PRIMARY KEY,
-    pedido_id INT NOT NULL,
-    produto_id INT NOT NULL,
-    quantidade INT NOT NULL,
-    preco_unitario DECIMAL(10,2) NOT NULL,
-    observacoes VARCHAR(255) NULL,
-    CHECK (quantidade > 0),
-    CHECK (preco_unitario >= 0),
-    FOREIGN KEY (pedido_id)
-        REFERENCES pedidos(pedido_id),
-    FOREIGN KEY (produto_id)
-        REFERENCES produtos(produto_id),
-    INDEX idx_itens_pedido_pedido (pedido_id),
-    INDEX idx_itens_pedido_produto (produto_id)
+
+CREATE TABLE IF NOT EXISTS order_items (
+    order_item_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    unit_price DECIMAL(10,2) NOT NULL,
+    notes VARCHAR(255) NULL,
+
+    CHECK (quantity > 0),
+
+    CHECK (unit_price >= 0),
+
+    FOREIGN KEY (order_id)
+        REFERENCES orders(order_id),
+
+    FOREIGN KEY (product_id)
+        REFERENCES products(product_id)
 );
 
-CREATE TABLE IF NOT EXISTS vendas (
-    venda_id INT AUTO_INCREMENT PRIMARY KEY,
-    pedido_id INT NOT NULL UNIQUE,
-    valor_total DECIMAL(10,2) NOT NULL,
-    forma_pagamento ENUM('dinheiro', 'credito', 'debito', 'pix') NOT NULL,
-    vendido_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CHECK (valor_total >= 0),
-    FOREIGN KEY (pedido_id)
-        REFERENCES pedidos(pedido_id),
-    INDEX idx_vendas_vendido_em (vendido_em),
-    INDEX idx_vendas_forma_pagamento (forma_pagamento)
+
+CREATE TABLE IF NOT EXISTS sales (
+    sale_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL UNIQUE,
+    total_amount DECIMAL(10,2) NOT NULL,
+
+    payment_method ENUM(
+        'cash',
+        'credit',
+        'debit',
+        'pix'
+    ) NOT NULL,
+
+    sold_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CHECK (total_amount >= 0),
+
+    FOREIGN KEY (order_id)
+        REFERENCES orders(order_id)
 );
 
-CREATE OR REPLACE VIEW vw_produtos AS
+
+CREATE OR REPLACE VIEW vw_products AS
 SELECT
-    p.produto_id,
-    p.nome AS nome_produto,
-    p.preco,
-    c.categoria_id,
-    c.nome AS nome_categoria,
-    p.ativo
-FROM produtos p
-JOIN categorias c
-    ON p.categoria_id = c.categoria_id;
+    p.product_id,
+    p.name AS product_name,
+    p.price,
+    c.category_id,
+    c.name AS category_name,
+    p.active
+FROM products p
+JOIN categories c
+    ON p.category_id = c.category_id;
 
-CREATE OR REPLACE VIEW vw_comandas_abertas AS
+
+CREATE OR REPLACE VIEW vw_open_orders AS
 SELECT
-    p.pedido_id,
-    c.numero_comanda,
-    p.status,
-    DATE_FORMAT(p.aberto_em, '%H:%i  %d/%m/%Y') AS aberto_em,
-    COALESCE(SUM(ip.quantidade * ip.preco_unitario), 0) AS valor_total
-FROM pedidos p
-JOIN comandas c
-    ON p.comanda_id = c.comanda_id
-LEFT JOIN itens_pedido ip
-    ON p.pedido_id = ip.pedido_id
-WHERE p.status = 'aberto'
+    o.order_id,
+    cc.card_number,
+    o.status,
+
+    DATE_FORMAT(
+        o.opened_at,
+        '%H:%i  %d/%m/%Y'
+    ) AS opened_at,
+
+    COALESCE(
+        SUM(oi.quantity * oi.unit_price),
+        0
+    ) AS total_amount
+
+FROM orders o
+
+JOIN command_cards cc
+    ON o.card_id = cc.card_id
+
+LEFT JOIN order_items oi
+    ON o.order_id = oi.order_id
+
+WHERE o.status = 'open'
+
 GROUP BY
-    p.pedido_id,
-    c.numero_comanda,
-    p.status,
-    p.aberto_em;
+    o.order_id,
+    cc.card_number,
+    o.status,
+    o.opened_at;
 
-CREATE OR REPLACE VIEW vw_resumo_pedido AS
-SELECT
-    pe.pedido_id,
-    co.numero_comanda,
-    pe.status,
-    DATE_FORMAT(pe.aberto_em, '%H:%i  %d/%m/%Y') AS aberto_em,
-    DATE_FORMAT(pe.fechado_em, '%H:%i  %d/%m/%Y') AS fechado_em,
-    pr.produto_id,
-    pr.nome AS nome_produto,
-    ca.nome AS nome_categoria,
-    ip.quantidade,
-    ip.preco_unitario,
-    ip.quantidade * ip.preco_unitario AS subtotal,
-    ip.observacoes,
-    SUM(ip.quantidade * ip.preco_unitario)
-        OVER (PARTITION BY pe.pedido_id) AS total_pedido
-FROM pedidos pe
-JOIN comandas co
-    ON pe.comanda_id = co.comanda_id
-JOIN itens_pedido ip
-    ON pe.pedido_id = ip.pedido_id
-JOIN produtos pr
-    ON ip.produto_id = pr.produto_id
-JOIN categorias ca
-    ON pr.categoria_id = ca.categoria_id;
 
-CREATE OR REPLACE VIEW vw_historico_vendas AS
+CREATE OR REPLACE VIEW vw_order_summary AS
 SELECT
-    v.venda_id,
-    v.pedido_id,
-    c.numero_comanda,
-    v.valor_total,
-    v.forma_pagamento,
-    CASE v.forma_pagamento
-        WHEN 'dinheiro' THEN 'Dinheiro'
-        WHEN 'credito' THEN 'Crédito'
-        WHEN 'debito' THEN 'Débito'
+    o.order_id,
+    cc.card_number,
+    o.status,
+
+    DATE_FORMAT(
+        o.opened_at,
+        '%H:%i  %d/%m/%Y'
+    ) AS opened_at,
+
+    DATE_FORMAT(
+        o.closed_at,
+        '%H:%i  %d/%m/%Y'
+    ) AS closed_at,
+
+    p.product_id,
+    p.name AS product_name,
+    c.name AS category_name,
+
+    oi.quantity,
+    oi.unit_price,
+
+    oi.quantity * oi.unit_price AS subtotal,
+
+    oi.notes,
+
+    SUM(
+        oi.quantity * oi.unit_price
+    ) OVER (
+        PARTITION BY o.order_id
+    ) AS order_total
+
+FROM orders o
+
+JOIN command_cards cc
+    ON o.card_id = cc.card_id
+
+JOIN order_items oi
+    ON o.order_id = oi.order_id
+
+JOIN products p
+    ON oi.product_id = p.product_id
+
+JOIN categories c
+    ON p.category_id = c.category_id;
+
+
+CREATE OR REPLACE VIEW vw_sales_history AS
+SELECT
+    s.sale_id,
+    s.order_id,
+    cc.card_number,
+    s.total_amount,
+    s.payment_method,
+
+    CASE s.payment_method
+        WHEN 'cash' THEN 'Dinheiro'
+        WHEN 'credit' THEN 'Crédito'
+        WHEN 'debit' THEN 'Débito'
         WHEN 'pix' THEN 'PIX'
-    END AS forma_pagamento_descricao,
-    DATE_FORMAT(v.vendido_em, '%H:%i  %d/%m/%Y') AS vendido_em,
-    v.vendido_em AS vendido_em_original
-FROM vendas v
-JOIN pedidos p
-    ON v.pedido_id = p.pedido_id
-JOIN comandas c
-    ON p.comanda_id = c.comanda_id;
+    END AS payment_method_label,
 
-CREATE OR REPLACE VIEW vw_resumo_diario AS
-SELECT
-    DATE(vendido_em) AS data_resumo,
-    DATE_FORMAT(vendido_em, '%d/%m/%Y') AS data_formatada,
-    COUNT(*) AS total_vendas,
-    SUM(valor_total) AS faturamento_total,
-    AVG(valor_total) AS ticket_medio
-FROM vendas
-GROUP BY DATE(vendido_em), DATE_FORMAT(vendido_em, '%d/%m/%Y');
+    DATE_FORMAT(
+        s.sold_at,
+        '%H:%i  %d/%m/%Y'
+    ) AS sold_at,
 
-CREATE OR REPLACE VIEW vw_resumo_semanal AS
-SELECT
-    YEARWEEK(vendido_em, 1) AS ano_semana,
-    COUNT(*) AS total_vendas,
-    SUM(valor_total) AS faturamento_total,
-    AVG(valor_total) AS ticket_medio
-FROM vendas
-GROUP BY YEARWEEK(vendido_em, 1);
+    s.sold_at AS sold_at_raw
 
-CREATE OR REPLACE VIEW vw_resumo_mensal AS
+FROM sales s
+
+JOIN orders o
+    ON s.order_id = o.order_id
+
+JOIN command_cards cc
+    ON o.card_id = cc.card_id;
+
+
+CREATE OR REPLACE VIEW vw_daily_summary AS
 SELECT
-    YEAR(vendido_em) AS ano,
-    MONTH(vendido_em) AS mes,
-    DATE_FORMAT(vendido_em, '%m/%Y') AS mes_formatado,
-    COUNT(*) AS total_vendas,
-    SUM(valor_total) AS faturamento_total,
-    AVG(valor_total) AS ticket_medio
-FROM vendas
+    DATE(sold_at) AS summary_date,
+
+    DATE_FORMAT(
+        sold_at,
+        '%d/%m/%Y'
+    ) AS date_label,
+
+    COUNT(*) AS total_sales,
+
+    SUM(total_amount) AS total_revenue,
+
+    AVG(total_amount) AS average_ticket
+
+FROM sales
+
+GROUP BY DATE(sold_at);
+
+
+CREATE OR REPLACE VIEW vw_weekly_summary AS
+SELECT
+    YEARWEEK(sold_at, 1) AS year_week,
+
+    MIN(DATE(sold_at)) AS first_sale_date,
+
+    MAX(DATE(sold_at)) AS last_sale_date,
+
+    COUNT(*) AS total_sales,
+
+    SUM(total_amount) AS total_revenue,
+
+    AVG(total_amount) AS average_ticket
+
+FROM sales
+
+GROUP BY YEARWEEK(sold_at, 1);
+
+
+CREATE OR REPLACE VIEW vw_monthly_summary AS
+SELECT
+    YEAR(sold_at) AS year,
+    MONTH(sold_at) AS month,
+
+    DATE_FORMAT(
+        sold_at,
+        '%m/%Y'
+    ) AS month_label,
+
+    COUNT(*) AS total_sales,
+
+    SUM(total_amount) AS total_revenue,
+
+    AVG(total_amount) AS average_ticket
+
+FROM sales
+
 GROUP BY
-    YEAR(vendido_em),
-    MONTH(vendido_em),
-    DATE_FORMAT(vendido_em, '%m/%Y');
+    YEAR(sold_at),
+    MONTH(sold_at),
+    DATE_FORMAT(sold_at, '%m/%Y');
 
+
+SELECT * FROM categories;
+
+SELECT * FROM vw_products;
+
+SELECT * FROM command_cards;
+
+SELECT * FROM vw_open_orders;
+
+SELECT * FROM vw_order_summary;
+
+SELECT * FROM vw_sales_history;
+
+SELECT * FROM vw_daily_summary;
+
+SELECT * FROM vw_weekly_summary;
+
+SELECT * FROM vw_monthly_summary;
+
+Select * from products;
+
+Select * from command_card;
+
+Select * from categories;
+
+
+SHOW TABLES;

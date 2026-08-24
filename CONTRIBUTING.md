@@ -66,7 +66,8 @@ test: validar bloqueio de comandas abertas
 
 ## Código
 
-- Identificadores do código devem ser escritos em inglês.
+- Identificadores do código Python devem ser escritos em inglês.
+- Tabelas, colunas, views, índices e valores de domínio do banco MySQL devem ser escritos em português.
 - Textos exibidos ao usuário devem permanecer em português.
 - Evite funções muito longas e responsabilidades misturadas.
 - Valide entradas antes de alterar dados.

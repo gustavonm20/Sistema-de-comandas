@@ -24,17 +24,14 @@ Status: 🚧 Em andamento
 - ⏳ #8 — Adicionar comparativos aos resumos
 - ⏳ #9 — Completar low-fi e organizar as telas
 
-### Resultado esperado
-
-Protótipo navegável, organizado e consistente, com hi-fi e low-fi dos fluxos essenciais.
-
 ## Fase 1 — Fundação técnica
 
 Status: 🚧 Em andamento
 
 - ⏳ #3 — Estruturar o projeto e configurar o ambiente
-- 🚧 #10 — Modelar banco de dados e entidades do domínio
+- 🚧 #10 — Modelar banco de dados MySQL e entidades do domínio
 - ⏳ #16 — Implementar layout base e navegação
+- ⏳ #19 — Implementar migrations versionadas do MySQL
 
 ### Já entregue na modelagem
 
@@ -64,20 +61,22 @@ Status: ⏳ Planejado
 - ⏳ #11 — Catálogo e gerenciamento de produtos
 - ⏳ #12 — Fluxo completo de comandas
 - ⏳ #13 — Pagamentos e histórico de vendas
+- ⏳ #21 — Tornar fechamento da comanda transacional
 
 ### Resultado esperado
 
-O estabelecimento consegue cadastrar produtos, abrir uma comanda, adicionar itens, receber o pagamento, fechar a comanda e consultar a venda.
+O estabelecimento consegue cadastrar produtos, abrir uma comanda, adicionar itens, receber o pagamento, fechar a comanda e consultar a venda sem risco de persistência parcial.
 
-## Fase 3 — Operação diária e caixa
+## Fase 3 — Operação diária, caixa e estoque
 
 Status: ⏳ Planejado
 
 - ⏳ #14 — Abertura, operação e fechamento do caixa
+- ⏳ #20 — Controle de estoque e movimentações
 
 ### Resultado esperado
 
-O estabelecimento abre o dia com um valor inicial, opera somente durante uma sessão ativa e encerra o caixa com conferência e registro de divergências.
+O estabelecimento abre o dia com um valor inicial, opera somente durante uma sessão ativa, encerra o caixa com conferência e mantém movimentações de estoque rastreáveis.
 
 ## Fase 4 — Indicadores e gestão
 
@@ -97,25 +96,26 @@ Status: ⏳ Planejado
 - ⏳ configurar ambiente de produção;
 - ⏳ criar primeira release estável.
 
-## Evoluções adicionais
-
-- controle de estoque e movimentações;
-- transações e proteção do fechamento financeiro;
-- migrations versionadas;
-- backup e restauração;
-- múltiplos funcionários e permissões;
-- cancelamentos e estornos;
-- auditoria;
-- exportação de relatórios;
-- integração fiscal.
-
 ## Ordem recomendada de execução
 
 1. Continuar a modelagem da issue #10 até operação diária e caixa.
 2. Estruturar o projeto da issue #3 e integrar Python ao MySQL.
-3. Implementar produtos e comandas: #11 e #12.
-4. Implementar fechamento financeiro e histórico: #13.
-5. Implementar operação diária: #14.
-6. Consumir as views e concluir os indicadores: #15.
-7. Finalizar os fluxos pendentes do Figma em paralelo: #5 a #9.
-8. Evoluir testes e automação continuamente: #17.
+3. Preparar migrations na #19 antes de mudanças estruturais mais profundas.
+4. Implementar produtos e comandas: #11 e #12.
+5. Implementar fechamento financeiro e histórico: #13 + #21.
+6. Implementar operação diária: #14.
+7. Evoluir estoque: #20.
+8. Consumir as views e concluir os indicadores: #15.
+9. Finalizar os fluxos pendentes do Figma em paralelo: #5 a #9.
+10. Evoluir testes e automação continuamente: #17.
+
+## Fora do primeiro MVP
+
+- múltiplos funcionários e permissões avançadas;
+- cancelamentos e estornos completos;
+- reabertura controlada de um dia encerrado;
+- exportação de relatórios em PDF e Excel;
+- tema escuro;
+- backup automatizado;
+- auditoria avançada;
+- integração fiscal.

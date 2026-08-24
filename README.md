@@ -61,12 +61,12 @@ O banco oficial em desenvolvimento utiliza **MySQL 8** e pode ser executado pelo
 
 O schema atual possui:
 
-- `categories`;
-- `products`;
-- `command_cards`;
-- `orders`;
-- `order_items`;
-- `sales`;
+- `categorias`;
+- `produtos`;
+- `comandas`;
+- `pedidos`;
+- `itens_pedido`;
+- `vendas`;
 - views para produtos, comandas abertas, resumo da comanda, histórico e indicadores por período.
 
 Arquivos:
@@ -103,7 +103,7 @@ A escolha definitiva do framework web será registrada quando a estrutura da apl
 ```bash
 git clone https://github.com/gustavonm20/Sistema-de-comandas.git
 cd Sistema-de-comandas
-python app.py
+python protótipo-inicial.py
 ```
 
 ## Executando o banco
@@ -120,7 +120,7 @@ SHOW FULL TABLES;
 
 ```text
 Sistema-de-comandas/
-├── app.py
+├── protótipo-inicial.py
 ├── database/
 │   └── schema.sql
 ├── README.md

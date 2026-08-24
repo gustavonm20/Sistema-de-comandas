@@ -2,39 +2,41 @@
 
 O projeto utiliza **MySQL 8** como banco relacional. O schema oficial está em [`database/schema.sql`](../database/schema.sql) e foi pensado para suportar as telas e fluxos definidos no Figma: produtos, comandas, pagamento, histórico e resumos por dia, semana e mês.
 
+A nomenclatura das tabelas, colunas, views, índices e valores de domínio foi padronizada em **português** para manter o banco coerente com o projeto e facilitar a leitura durante o desenvolvimento.
+
 ## Estrutura atual
 
-### `categories`
+### `categorias`
 Classifica os produtos. O nome da categoria é único para evitar duplicidades.
 
-### `products`
+### `produtos`
 Armazena nome, preço atual, categoria e status ativo/inativo. Produtos desativados continuam existindo para preservar referências históricas.
 
-### `command_cards`
+### `comandas`
 Representa as comandas físicas do estabelecimento. O número possui quatro dígitos e é reutilizável após o fechamento de um atendimento.
 
-### `orders`
+### `pedidos`
 Representa cada utilização de uma comanda física. Uma mesma comanda pode gerar muitos pedidos ao longo do tempo, mas somente um deles pode permanecer aberto por vez.
 
-A coluna gerada `open_card_id` combinada com `UNIQUE` garante essa regra diretamente no banco: quando o pedido está aberto, ela recebe o `card_id`; quando fecha, passa a `NULL` e o número pode ser reutilizado.
+A coluna gerada `comanda_aberta_id` combinada com `UNIQUE` garante essa regra diretamente no banco: quando o pedido está aberto, ela recebe o `comanda_id`; quando fecha, passa a `NULL` e o número pode ser reutilizado.
 
-### `order_items`
+### `itens_pedido`
 Liga produtos aos pedidos e registra quantidade, preço unitário no momento do consumo e observações. O preço é copiado para o item para que alterações futuras no catálogo não modifiquem vendas antigas.
 
-### `sales`
-Registra o fechamento financeiro de um pedido, incluindo total, forma de pagamento e data/hora. Cada pedido pode gerar no máximo uma venda.
+### `vendas`
+Registra o fechamento financeiro de um pedido, incluindo valor total, forma de pagamento e data/hora. Cada pedido pode gerar no máximo uma venda.
 
 ## Views
 
 As views funcionam como consultas reutilizáveis que simplificam a futura API e correspondem às principais telas do Figma.
 
-- `vw_products`: catálogo com categoria e status.
-- `vw_open_orders`: comandas abertas e total atual.
-- `vw_order_summary`: itens, subtotais e total de uma comanda.
-- `vw_sales_history`: histórico de vendas com número da comanda e forma de pagamento legível.
-- `vw_daily_summary`: quantidade de vendas, faturamento e ticket médio por dia.
-- `vw_weekly_summary`: consolidação semanal.
-- `vw_monthly_summary`: consolidação mensal.
+- `vw_produtos`: catálogo com categoria e status.
+- `vw_comandas_abertas`: comandas abertas e total atual.
+- `vw_resumo_pedido`: itens, subtotais e total de uma comanda.
+- `vw_historico_vendas`: histórico de vendas com número da comanda e forma de pagamento legível.
+- `vw_resumo_diario`: quantidade de vendas, faturamento e ticket médio por dia.
+- `vw_resumo_semanal`: consolidação semanal.
+- `vw_resumo_mensal`: consolidação mensal.
 
 ## Recursos SQL utilizados
 
@@ -42,13 +44,13 @@ As views funcionam como consultas reutilizáveis que simplificam a futura API e 
 Fornecem uma identidade interna estável para cada registro e geram os IDs automaticamente.
 
 ### `FOREIGN KEY`
-Mantém integridade referencial entre categorias, produtos, comandas, itens e vendas.
+Mantém integridade referencial entre categorias, produtos, comandas, pedidos, itens e vendas.
 
 ### `CHECK`
 Impõe regras como preço não negativo, quantidade maior que zero e número da comanda com exatamente quatro dígitos numéricos.
 
 ### `ENUM`
-Restringe estados e formas de pagamento aos valores aceitos pelo domínio.
+Restringe estados e formas de pagamento aos valores aceitos pelo domínio. No schema atual, os pedidos usam `aberto` e `fechado`; as vendas usam `dinheiro`, `credito`, `debito` e `pix`.
 
 ### Coluna gerada + `UNIQUE`
 Impede que uma mesma comanda física esteja aberta em dois atendimentos simultâneos.
@@ -66,7 +68,7 @@ Foram adicionados índices nos campos usados com frequência em filtros e relaci
 
 1. Abra o MySQL Workbench e conecte-se ao MySQL 8.
 2. Abra `database/schema.sql`.
-3. Execute o script completo.
+3. Execute o script completo em um banco novo.
 4. Atualize a área **Schemas**.
 5. Verifique as tabelas com:
 
@@ -89,6 +91,12 @@ O banco mantém valores `DATETIME` de forma nativa. A apresentação usada nas v
 ```
 
 Isso é feito com `DATE_FORMAT`, preservando o tipo correto no armazenamento.
+
+## Atenção sobre bancos já criados
+
+A alteração dos nomes para português muda a estrutura lógica do schema. `CREATE TABLE IF NOT EXISTS` não renomeia tabelas antigas automaticamente.
+
+Enquanto o banco estiver apenas em desenvolvimento e sem dados importantes, a opção mais simples é criar um schema limpo usando o arquivo atualizado. Quando o projeto possuir dados persistentes importantes, mudanças desse tipo deverão ser feitas por **migrations**, sem apagar o banco.
 
 ## Próximas evoluções
 

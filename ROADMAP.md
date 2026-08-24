@@ -36,11 +36,11 @@ Status: 🚧 Em andamento
 ### Já entregue na modelagem
 
 - ✅ MySQL 8 definido como banco relacional do projeto.
-- ✅ `categories` e `products`.
-- ✅ `command_cards` com número fixo de quatro dígitos.
-- ✅ `orders` com proteção contra duas comandas abertas para o mesmo número.
-- ✅ `order_items` com quantidade, preço histórico e observações.
-- ✅ `sales` com forma de pagamento e data da venda.
+- ✅ `categorias` e `produtos`.
+- ✅ `comandas` com número fixo de quatro dígitos.
+- ✅ `pedidos` com proteção contra duas comandas abertas para o mesmo número.
+- ✅ `itens_pedido` com quantidade, preço histórico e observações.
+- ✅ `vendas` com forma de pagamento e data da venda.
 - ✅ constraints de integridade.
 - ✅ índices iniciais.
 - ✅ views para produtos, comandas abertas, detalhes, histórico e resumos.
@@ -84,7 +84,7 @@ Status: 🚧 Base de dados preparada
 
 - ⏳ #15 — Resumos diário, semanal e mensal
 
-As views `vw_daily_summary`, `vw_weekly_summary` e `vw_monthly_summary` já fornecem a base de faturamento, quantidade de vendas e ticket médio. Comparações de período, produtos mais vendidos e gráficos ainda serão implementados.
+As views `vw_resumo_diario`, `vw_resumo_semanal` e `vw_resumo_mensal` já fornecem a base de faturamento, quantidade de vendas e ticket médio. Comparações de período, produtos mais vendidos e gráficos ainda serão implementados.
 
 ## Fase 5 — Qualidade e entrega
 

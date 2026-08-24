@@ -230,3 +230,4 @@ GROUP BY
     YEAR(vendido_em),
     MONTH(vendido_em),
     DATE_FORMAT(vendido_em, '%m/%Y');
+

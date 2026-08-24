@@ -11,9 +11,9 @@ O quadro deve refletir o estado real do projeto sem duplicar o detalhamento das 
 - #15 — Resumos
 - #16 — Layout base e navegação
 - #17 — Testes e integração contínua
-- Controle de estoque e movimentações
-- Migrations do banco
-- Backup e restauração
+- #19 — Migrations versionadas do MySQL
+- #20 — Controle de estoque e movimentações
+- #21 — Fechamento transacional da comanda
 
 ## Todo
 
@@ -28,7 +28,7 @@ O quadro deve refletir o estado real do projeto sem duplicar o detalhamento das 
 
 - #1 — Funcionalidades e regras de negócio
 - #2 — Protótipo hi-fi e low-fi
-- #10 — Modelar banco de dados e entidades
+- #10 — Modelar banco de dados MySQL e entidades
 
 ### Progresso atual de #10
 
@@ -72,5 +72,8 @@ Critérios mínimos:
 1. Consolidar a primeira etapa da issue #10 no MySQL.
 2. Modelar operação diária/caixa e estabelecimento.
 3. Iniciar #3 com a conexão Python ↔ MySQL.
-4. Começar #11 e #12 sobre a estrutura persistente.
-5. Continuar em paralelo as pendências do Figma #5 a #9.
+4. Planejar #19 antes das próximas mudanças destrutivas de schema.
+5. Começar #11 e #12 sobre a estrutura persistente.
+6. Implementar #21 junto do fluxo de pagamento #13.
+7. Evoluir #20 após definir a regra de baixa de estoque.
+8. Continuar em paralelo as pendências do Figma #5 a #9.

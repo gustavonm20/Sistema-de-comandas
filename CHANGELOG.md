@@ -19,21 +19,36 @@ O formato é inspirado em *Keep a Changelog* e o projeto pretende adotar version
 - parte dos wireframes low-fi;
 - documentação de regras de negócio;
 - roadmap com issues de design, backend, frontend, MVP e qualidade;
-- templates de issue e pull request.
+- templates de issue e pull request;
+- schema inicial do MySQL em `database/schema.sql`;
+- tabelas `categories`, `products`, `command_cards`, `orders`, `order_items` e `sales`;
+- constraints de integridade para preços, quantidades, estados e números de comandas;
+- proteção para impedir dois atendimentos abertos na mesma comanda física;
+- índices iniciais para consultas de produtos, pedidos e vendas;
+- views para catálogo, comandas abertas, detalhes da comanda e histórico de vendas;
+- views para resumos diário, semanal e mensal;
+- documentação específica da modelagem em `docs/DATABASE.md`.
 
 ### Alterado
 
-- documentação separada por responsabilidade para manter um histórico de commits mais claro;
-- links de acompanhamento centralizados no README;
-- roadmap atualizado com o marco atual e a próxima tarefa recomendada.
+- banco planejado alterado de SQLite para MySQL 8;
+- documentação deixou de fixar Flask + SQLite como arquitetura definitiva;
+- roadmap atualizado para refletir o início da fundação técnica;
+- Kanban documentado com a issue #10 em andamento;
+- cadastro de produtos de exemplo passou a localizar categorias pelo nome em vez de depender de IDs fixos;
+- datas permanecem armazenadas como `DATETIME` e são formatadas nas views para `HH:MM  DD/MM/AAAA`.
 
 ### Planejado
 
+- integração Python ↔ MySQL;
+- migrations versionadas;
+- transação atômica para fechamento de comanda e registro da venda;
 - abertura de caixa com valor inicial;
 - bloqueio do fechamento com comandas abertas;
 - confirmação de encerramento;
 - conferência e fechamento de caixa;
 - comparação entre períodos;
+- controle de estoque e movimentações;
 - conclusão e organização do low-fi e hi-fi;
-- aplicação web com Flask e SQLite;
-- testes automatizados e GitHub Actions.
+- testes automatizados e GitHub Actions;
+- backup e restauração.

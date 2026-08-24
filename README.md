@@ -2,22 +2,25 @@
 
 O **FluxoPag** é um sistema de comandas pensado para padarias, cafeterias e pequenos estabelecimentos. O objetivo é centralizar produtos, comandas, pagamentos, histórico de vendas, abertura e fechamento do dia e resumos gerenciais.
 
-> O projeto está em fase de **prototipação e definição das regras de negócio**. O código atual em Python é um protótipo didático de terminal; a aplicação web ainda será desenvolvida.
+> O projeto está em fase de evolução da prototipação para a fundação técnica. O protótipo didático em Python continua como material de treino, enquanto o banco MySQL começa a representar a estrutura da futura aplicação alinhada ao Figma.
 
 ## Estado atual
 
 | Área | Situação |
 | --- | --- |
-| Protótipo de terminal em Python | Em desenvolvimento |
+| Protótipo de terminal em Python | Funcional para treino e evolução da lógica |
 | Protótipo hi-fi no Figma | Em desenvolvimento |
 | Fluxos de navegação no Figma | Parcialmente conectados |
 | Low-fi das telas | Em desenvolvimento |
-| Aplicação web com Flask e SQLite | Planejada |
+| Modelagem MySQL | Em andamento |
+| Schema MySQL inicial | Implementado |
+| Views de produtos, comandas, histórico e resumos | Implementadas |
+| Aplicação web | Planejada |
 | Testes e deploy | Planejados |
 
 ## Protótipo no Figma
 
-O protótipo atual já contempla:
+O protótipo atual contempla:
 
 - dashboard;
 - produtos;
@@ -36,45 +39,64 @@ O protótipo atual já contempla:
 
 [Acessar o protótipo no Figma](https://www.figma.com/design/Rau8PgbGwiiJwRo9MHgzMW/Comandas?node-id=0-1)
 
-### Próximas melhorias de design
-
-- confirmação antes de finalizar o dia;
-- bloqueio do fechamento quando existirem comandas abertas;
-- abertura de caixa com valor inicial;
-- fechamento de caixa com valor esperado, valor contado e divergência;
-- comparação entre dia, semana e mês atuais e anteriores;
-- low-fi de todos os novos fluxos;
-- revisão da ordem, nomes e alinhamento de todas as telas.
-
 ## Regras de negócio principais
 
-- A conta autenticada representa o **estabelecimento**, não um funcionário específico.
+- A conta autenticada representa o **estabelecimento**, não um funcionário específico no primeiro MVP.
 - Cada comanda é identificada por um número fixo e reutilizável.
 - A comanda não exige o nome do cliente.
+- O número da comanda possui quatro dígitos no banco.
+- Uma mesma comanda física não pode possuir dois atendimentos abertos simultaneamente.
 - Ao ser fechada, a comanda fica disponível para um novo atendimento.
-- O estabelecimento deve iniciar o dia antes de contabilizar vendas e comandas.
+- Produtos desativados permanecem registrados para preservar o histórico.
+- O preço consumido é armazenado no item da comanda para que mudanças futuras no catálogo não alterem vendas antigas.
+- O estabelecimento deve iniciar o dia antes de contabilizar vendas e comandas no fluxo final.
 - O dia não poderá ser finalizado enquanto existirem comandas abertas.
-- Ao finalizar o dia, os dados consolidados alimentam os resumos diário, semanal e mensal.
-- O fechamento de caixa deve registrar divergências entre o valor esperado e o valor contado.
+- Os dados finalizados alimentam os resumos diário, semanal e mensal.
 
 Mais detalhes estão em [docs/BUSINESS_RULES.md](docs/BUSINESS_RULES.md).
 
+## Banco de dados
+
+O banco oficial em desenvolvimento utiliza **MySQL 8** e pode ser executado pelo MySQL Workbench.
+
+O schema atual possui:
+
+- `categories`;
+- `products`;
+- `command_cards`;
+- `orders`;
+- `order_items`;
+- `sales`;
+- views para produtos, comandas abertas, resumo da comanda, histórico e indicadores por período.
+
+Arquivos:
+
+- [Schema MySQL](database/schema.sql)
+- [Documentação do banco](docs/DATABASE.md)
+
 ## Tecnologias
 
-### Protótipo atual
+### Protótipo de treino
 
 - Python 3
 - Execução em terminal
-- Armazenamento temporário em memória
+- Estruturas em memória
 
-### Aplicação planejada
+### Fundação técnica atual
 
-- Python
-- Flask
-- SQLite
-- HTML, CSS e JavaScript
-- Testes automatizados com Pytest
-- GitHub Actions para integração contínua
+- MySQL 8
+- MySQL Workbench
+- SQL relacional com constraints, views, window functions e índices
+
+### Aplicação web planejada
+
+- Python no backend
+- integração com MySQL
+- frontend baseado no protótipo do Figma
+- Pytest
+- GitHub Actions
+
+A escolha definitiva do framework web será registrada quando a estrutura da aplicação for iniciada; a documentação antiga que fixava Flask + SQLite foi substituída pela decisão atual de utilizar MySQL.
 
 ## Executando o protótipo de terminal
 
@@ -84,39 +106,44 @@ cd Sistema-de-comandas
 python app.py
 ```
 
-O arquivo `app.py` atualmente implementa parte do módulo de produtos. Os módulos de comandas, histórico e resumos ainda possuem etapas provisórias.
+## Executando o banco
+
+Abra `database/schema.sql` no MySQL Workbench e execute o script completo.
+
+Para conferir as tabelas e views:
+
+```sql
+SHOW FULL TABLES;
+```
 
 ## Organização do repositório
 
 ```text
 Sistema-de-comandas/
 ├── app.py
+├── database/
+│   └── schema.sql
 ├── README.md
 ├── ROADMAP.md
 ├── CHANGELOG.md
 ├── CONTRIBUTING.md
 ├── docs/
 │   ├── BUSINESS_RULES.md
+│   ├── DATABASE.md
 │   ├── FIGMA_STATUS.md
 │   └── KANBAN.md
 └── .github/
-    ├── ISSUE_TEMPLATE/
-    │   └── feature_request.md
-    └── pull_request_template.md
 ```
 
 ## Planejamento
 
 - [Quadro Kanban do projeto](https://github.com/users/gustavonm20/projects/2/views/4)
-- [Roadmap do projeto](ROADMAP.md)
-- [Organização sugerida do Kanban](docs/KANBAN.md)
-- [Situação do protótipo no Figma](docs/FIGMA_STATUS.md)
+- [Roadmap](ROADMAP.md)
+- [Organização do Kanban](docs/KANBAN.md)
+- [Banco de dados](docs/DATABASE.md)
+- [Situação do Figma](docs/FIGMA_STATUS.md)
 - [Regras de negócio](docs/BUSINESS_RULES.md)
-- [Issues do projeto](https://github.com/gustavonm20/Sistema-de-comandas/issues)
-
-## Acompanhamento rápido
-
-O andamento do projeto deve ser acompanhado pelo Kanban e pelas issues. O `ROADMAP.md` apresenta a ordem geral das fases, enquanto cada issue contém escopo, dependências e critérios de aceitação.
+- [Issues](https://github.com/gustavonm20/Sistema-de-comandas/issues)
 
 ## Contribuição
 

@@ -1,65 +1,79 @@
 # Organização sugerida do Kanban
 
-O quadro deve usar um fluxo simples para não duplicar informação já existente nas issues.
+O quadro deve refletir o estado real do projeto sem duplicar o detalhamento das issues. Este arquivo registra a organização recomendada; a movimentação visual do GitHub Projects deve acompanhar estas mudanças.
 
-## Colunas
+## Backlog
 
-### Backlog
-
-Tarefas definidas, mas que ainda não devem ser iniciadas.
-
-- #3 — Estruturar o projeto e configurar o ambiente
-- #10 — Modelar banco de dados e entidades
-- #11 — Produtos
-- #12 — Comandas
+- #11 — Catálogo e gerenciamento de produtos
+- #12 — Fluxo completo de comandas
 - #13 — Pagamentos e histórico
 - #14 — Operação e caixa
 - #15 — Resumos
 - #16 — Layout base e navegação
 - #17 — Testes e integração contínua
+- #19 — Migrations versionadas do MySQL
+- #20 — Controle de estoque e movimentações
+- #21 — Fechamento transacional da comanda
 
-### Todo
+## Todo
 
-Tarefas prontas para começar, sem bloqueios de definição.
-
+- #3 — Estruturar o projeto e configurar o ambiente
 - #5 — Abertura de caixa no Figma
 - #6 — Bloqueio com comandas abertas
 - #7 — Confirmação e fechamento de caixa
 - #8 — Comparativos dos resumos
+- #9 — Organizar hi-fi e low-fi
 
-### In Progress
-
-Tarefas em execução ativa. Recomenda-se manter no máximo duas tarefas nesta coluna.
+## In Progress
 
 - #1 — Funcionalidades e regras de negócio
 - #2 — Protótipo hi-fi e low-fi
+- #10 — Modelar banco de dados MySQL e entidades
 
-### Review
+### Progresso atual de #10
 
-Tarefas concluídas que precisam de revisão visual, funcional ou de código.
+- schema MySQL inicial criado;
+- categorias e produtos modelados;
+- comandas físicas e reutilizáveis modeladas;
+- pedidos e itens modelados;
+- vendas modeladas;
+- proteção contra duas utilizações abertas da mesma comanda;
+- views de produtos, comandas abertas, histórico e resumos criadas;
+- documentação do banco criada.
 
-- mover para cá quando uma issue possuir entrega pronta;
-- revisar critérios de aceitação;
-- validar o fluxo no Figma ou os testes no pull request.
+## Review
 
-### Done
+Mover para esta coluna quando uma entrega estiver pronta para validação visual, funcional ou de código.
 
-Tarefas concluídas, revisadas e integradas.
+Critérios mínimos:
+
+- critérios de aceitação revisados;
+- documentação atualizada;
+- alterações integradas por pull request quando aplicável;
+- validação do Figma para mudanças visuais;
+- validação de schema/consultas para mudanças de banco.
+
+## Done
 
 - #4 — Issue duplicada do protótipo
+- PR #18 — Organização inicial de roadmap, regras e acompanhamento do Figma
 
 ## Política de movimentação
 
 1. Uma tarefa sai do Backlog quando suas dependências estiverem resolvidas.
 2. Antes de mover para In Progress, confirme os critérios de aceitação.
-3. Evite mais de duas tarefas simultâneas em In Progress.
-4. Use Review para validar antes de encerrar a issue.
+3. Evite muitas frentes simultâneas; priorize terminar a modelagem do banco e estruturar a aplicação.
+4. Use Review para validar antes de encerrar uma issue.
 5. Só mova para Done depois de atualizar documentação e fechar a issue.
+6. Mudanças relevantes de código ou schema devem passar por branch e pull request.
 
 ## Ordem imediata recomendada
 
-1. Concluir #5, #6, #7 e #8.
-2. Executar #9 para organizar o arquivo do Figma.
-3. Revisar e encerrar #2.
-4. Finalizar as pendências restantes da #1.
-5. Iniciar #3 e #10.
+1. Consolidar a primeira etapa da issue #10 no MySQL.
+2. Modelar operação diária/caixa e estabelecimento.
+3. Iniciar #3 com a conexão Python ↔ MySQL.
+4. Planejar #19 antes das próximas mudanças destrutivas de schema.
+5. Começar #11 e #12 sobre a estrutura persistente.
+6. Implementar #21 junto do fluxo de pagamento #13.
+7. Evoluir #20 após definir a regra de baixa de estoque.
+8. Continuar em paralelo as pendências do Figma #5 a #9.

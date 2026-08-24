@@ -4,6 +4,8 @@ O projeto utiliza **MySQL 8** como banco relacional. O schema oficial está em [
 
 A nomenclatura das tabelas, colunas, views, índices e valores de domínio foi padronizada em **português** para manter o banco coerente com o projeto e facilitar a leitura durante o desenvolvimento.
 
+Esta documentação deve evoluir junto com o `schema.sql`, registrando as decisões de modelagem antes das próximas integrações com o backend.
+
 ## Estrutura atual
 
 ### `categorias`

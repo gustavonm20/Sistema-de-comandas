@@ -31,7 +31,7 @@ Uma PR aberta não encerra automaticamente uma issue. Duplicada, cancelada e sub
 3. Reutilizar ou criar `Prioridade` com **Alta, Normal** e `Área` com **Produto, Design, Aplicação, Dados, Qualidade**, se esses campos trouxerem filtros úteis. Preferir o campo de milestone das issues a um campo duplicado.
 4. Criar/reutilizar os milestones **Base consolidada**, **Atendimento e caixa**, **Interface e resumos**, **Qualidade e acesso**, **Extensões posteriores**, sem prazo. Atribuir conforme a tabela.
 5. Adicionar as issues reais abaixo somente se ainda não forem itens. Preencher status, prioridade e área; conferir a evidência antes de movimentar.
-6. Vincular a PR da branch `chore/consolidar-fluxopag` e deixá-la **Em revisão**; após merge autorizado, rever cada critério individualmente. Preservar os itens históricos das PRs #18/#22/#23, quando já presentes.
+6. Vincular a [PR #25](https://github.com/gustavonm20/Sistema-de-comandas/pull/25), da branch `chore/consolidar-fluxopag`, e deixá-la **Em revisão**; após merge autorizado, rever cada critério individualmente. Preservar os itens históricos das PRs #18/#22/#23, quando já presentes.
 7. Para labels de área/prioridade, preferir os campos do Projects. Se filtros no repositório exigirem labels, criar apenas as correspondentes necessárias; não duplicar toda a taxonomia sem necessidade.
 
 | Issue | Status proposto | Prioridade | Área | Milestone proposto | Label aplicada |

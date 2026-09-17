@@ -1,0 +1,53 @@
+name: Verificações
+
+on:
+  push:
+    branches: [main, chore/consolidar-fluxopag]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  python-and-mysql:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: test-only-password
+          TZ: America/Sao_Paulo
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -ptest-only-password"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+    env:
+      MYSQL_HOST: 127.0.0.1
+      MYSQL_PORT: 3306
+      MYSQL_USER: root
+      MYSQL_PASSWORD: test-only-password
+      MYSQL_DATABASE: fluxopag_test_ci
+      RUN_MYSQL_TESTS: '1'
+      TZ: America/Sao_Paulo
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Instalar dependências
+        run: python -m pip install -r requirements.txt
+      - name: Inicializar MySQL isolado
+        run: python initialize_database.py
+      - name: Verificar aplicação e banco real
+        run: python -m unittest discover -s tests -v
+      - name: Verificar protótipo histórico
+        working-directory: legacy/terminal-json
+        run: python -m unittest discover -p 'test_*.py' -v
+      - name: Verificar links e arquivos da documentação
+        run: python scripts/check_docs.py

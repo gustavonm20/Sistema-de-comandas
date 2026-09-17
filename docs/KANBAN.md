@@ -1,79 +1,71 @@
-# Organização sugerida do Kanban
+# Kanban e organização do GitHub
 
-O quadro deve refletir o estado real do projeto sem duplicar o detalhamento das issues. Este arquivo registra a organização recomendada; a movimentação visual do GitHub Projects deve acompanhar estas mudanças.
+[Índice](README.md) · [Roadmap](../ROADMAP.md) · [Quadro existente](https://github.com/users/gustavonm20/projects/2/views/4)
 
-## Backlog
+O quadro de referência é o [FluxoPag Kanban — Projects 2, visão 4](https://github.com/users/gustavonm20/projects/2/views/4). Nenhum segundo quadro foi criado.
 
-- #11 — Catálogo e gerenciamento de produtos
-- #12 — Fluxo completo de comandas
-- #13 — Pagamentos e histórico
-- #14 — Operação e caixa
-- #15 — Resumos
-- #16 — Layout base e navegação
-- #17 — Testes e integração contínua
-- #19 — Migrations versionadas do MySQL
-- #20 — Controle de estoque e movimentações
-- #21 — Fechamento transacional da comanda
+## O que foi aplicado e o que depende de acesso
 
-## Todo
+As descrições das 20 issues ativas foram reconciliadas com código, design e testes, incluindo #11. A #20 passou de MVP para extensão; #24 foi criada para acesso e formulários. Foram reutilizadas as labels existentes `bug`, `enhancement` e `documentation`. Não há encerramentos novos nem atribuição de responsáveis/prazos.
 
-- #3 — Estruturar o projeto e configurar o ambiente
-- #5 — Abertura de caixa no Figma
-- #6 — Bloqueio com comandas abertas
-- #7 — Confirmação e fechamento de caixa
-- #8 — Comparativos dos resumos
-- #9 — Organizar hi-fi e low-fi
+A integração GitHub disponível permite arquivos, commits, PRs e issues, mas não expõe edição de Projects, criação de labels/milestones ou configuração do repositório. O acesso ao quadro pelo navegador sem sessão retornou 404; isso **não demonstra que o quadro foi excluído**. Sua configuração e seus itens não puderam ser inspecionados. Portanto, as operações abaixo são **pendentes**, não alterações já aplicadas ao Projects.
 
-## In Progress
+Não foram encontrados milestones na consulta pública da revisão. As nove labels padrão foram consultadas; nenhuma label existente foi apagada. Área e prioridade foram registradas nos corpos das issues enquanto os campos nativos não estão disponíveis.
 
-- #1 — Funcionalidades e regras de negócio
-- #2 — Protótipo hi-fi e low-fi
-- #10 — Modelar banco de dados MySQL e entidades
+## Política de fluxo
 
-### Progresso atual de #10
+| Status | Condição para entrar | Condição para sair |
+| --- | --- | --- |
+| Backlog | Escopo futuro ou decisão/dependência ainda aberta | Critérios e dependências suficientes para iniciar |
+| A fazer | Trabalho delimitado e pronto para ser escolhido | Desenvolvimento realmente iniciado |
+| Em andamento | Alteração ativa, vinculada a issue/branch | Entrega concreta pronta para revisão |
+| Em revisão | Código/documento entregue e aguardando aceitação | Critérios satisfeitos e integração ou aceitação explícita |
+| Concluído | Entrega aceita com evidência | Reabrir apenas se houver regressão/escopo justificável |
 
-- schema MySQL inicial criado;
-- categorias e produtos modelados;
-- comandas físicas e reutilizáveis modeladas;
-- pedidos e itens modelados;
-- vendas modeladas;
-- proteção contra duas utilizações abertas da mesma comanda;
-- views de produtos, comandas abertas, histórico e resumos criadas;
-- documentação do banco criada.
+Uma PR aberta não encerra automaticamente uma issue. Duplicada, cancelada e substituída não significam funcionalidade concluída. A #4 permanece fechada como duplicada da #2, fora das métricas de entrega. PRs #18, #22 e #23 foram integradas e são histórico concluído, sem tornar o escopo atual das issues automaticamente pronto.
 
-## Review
+## Configuração exata pendente
 
-Mover para esta coluna quando uma entrega estiver pronta para validação visual, funcional ou de código.
+1. Abrir **o Projects 2 existente**, inspecionar campos/opções e itens antes de editar; preservar opções equivalentes e histórico.
+2. Mapear o campo `Status` para **Backlog, A fazer, Em andamento, Em revisão, Concluído**, reaproveitando opções existentes. Não reinicializar o quadro.
+3. Reutilizar ou criar `Prioridade` com **Alta, Normal** e `Área` com **Produto, Design, Aplicação, Dados, Qualidade**, se esses campos trouxerem filtros úteis. Preferir o campo de milestone das issues a um campo duplicado.
+4. Criar/reutilizar os milestones **Base consolidada**, **Atendimento e caixa**, **Interface e resumos**, **Qualidade e acesso**, **Extensões posteriores**, sem prazo. Atribuir conforme a tabela.
+5. Adicionar as issues reais abaixo somente se ainda não forem itens. Preencher status, prioridade e área; conferir a evidência antes de movimentar.
+6. Vincular a [PR #25](https://github.com/gustavonm20/Sistema-de-comandas/pull/25), da branch `chore/consolidar-fluxopag`, e deixá-la **Em revisão**; após merge autorizado, rever cada critério individualmente. Preservar os itens históricos das PRs #18/#22/#23, quando já presentes.
+7. Para labels de área/prioridade, preferir os campos do Projects. Se filtros no repositório exigirem labels, criar apenas as correspondentes necessárias; não duplicar toda a taxonomia sem necessidade.
 
-Critérios mínimos:
+| Issue | Status proposto | Prioridade | Área | Milestone proposto | Label aplicada |
+| --- | --- | --- | --- | --- | --- |
+| [#1](https://github.com/gustavonm20/Sistema-de-comandas/issues/1) | A fazer | alta | produto | Base consolidada | `documentation` |
+| [#2](https://github.com/gustavonm20/Sistema-de-comandas/issues/2) | Backlog | normal | design | Interface e resumos | `enhancement` |
+| [#3](https://github.com/gustavonm20/Sistema-de-comandas/issues/3) | Em revisão | alta | aplicação | Base consolidada | `enhancement` |
+| [#5](https://github.com/gustavonm20/Sistema-de-comandas/issues/5) | A fazer | normal | design | Interface e resumos | `enhancement` |
+| [#6](https://github.com/gustavonm20/Sistema-de-comandas/issues/6) | A fazer | normal | design | Interface e resumos | `enhancement` |
+| [#7](https://github.com/gustavonm20/Sistema-de-comandas/issues/7) | A fazer | normal | design | Interface e resumos | `enhancement` |
+| [#8](https://github.com/gustavonm20/Sistema-de-comandas/issues/8) | Backlog | normal | design | Interface e resumos | `enhancement` |
+| [#9](https://github.com/gustavonm20/Sistema-de-comandas/issues/9) | A fazer | normal | design | Interface e resumos | `enhancement` |
+| [#10](https://github.com/gustavonm20/Sistema-de-comandas/issues/10) | A fazer | alta | dados | Base consolidada | `enhancement` |
+| [#11](https://github.com/gustavonm20/Sistema-de-comandas/issues/11) | Em revisão | alta | aplicação | Base consolidada | `enhancement` |
+| [#12](https://github.com/gustavonm20/Sistema-de-comandas/issues/12) | A fazer | alta | aplicação | Atendimento e caixa | `enhancement` |
+| [#13](https://github.com/gustavonm20/Sistema-de-comandas/issues/13) | A fazer | alta | aplicação | Atendimento e caixa | `enhancement` |
+| [#14](https://github.com/gustavonm20/Sistema-de-comandas/issues/14) | A fazer | alta | aplicação | Atendimento e caixa | `enhancement` |
+| [#15](https://github.com/gustavonm20/Sistema-de-comandas/issues/15) | Backlog | normal | aplicação | Interface e resumos | `enhancement` |
+| [#16](https://github.com/gustavonm20/Sistema-de-comandas/issues/16) | A fazer | normal | aplicação | Interface e resumos | `enhancement` |
+| [#17](https://github.com/gustavonm20/Sistema-de-comandas/issues/17) | A fazer | alta | qualidade | Qualidade e acesso | `enhancement` |
+| [#19](https://github.com/gustavonm20/Sistema-de-comandas/issues/19) | A fazer | alta | dados | Base consolidada | `enhancement` |
+| [#20](https://github.com/gustavonm20/Sistema-de-comandas/issues/20) | Backlog | normal | dados | Extensões posteriores | `enhancement` |
+| [#21](https://github.com/gustavonm20/Sistema-de-comandas/issues/21) | A fazer | alta | dados | Atendimento e caixa | `bug` |
+| [#24](https://github.com/gustavonm20/Sistema-de-comandas/issues/24) | Backlog | alta | aplicação | Qualidade e acesso | `enhancement` |
 
-- critérios de aceitação revisados;
-- documentação atualizada;
-- alterações integradas por pull request quando aplicável;
-- validação do Figma para mudanças visuais;
-- validação de schema/consultas para mudanças de banco.
+Não há trabalho marcado como Em andamento só por existir no plano. #3 e #11 aguardam revisão da entrega; as demais questões ainda têm lacunas relevantes. A PR de consolidação não substitui esses itens.
 
-## Done
+## Metadados do repositório pendentes
 
-- #4 — Issue duplicada do protótipo
-- PR #18 — Organização inicial de roadmap, regras e acompanhamento do Figma
+Aplicar quando houver ferramenta/permissão para configurações:
 
-## Política de movimentação
+- **Descrição:** `FluxoPag — Sistema de Comandas em Python, Flask e MySQL para pequenos estabelecimentos. Produtos, atendimentos e pagamentos registrados; aplicação em evolução.`
+- **Topics:** `python`, `flask`, `mysql`, `html`, `css`, `javascript`, `comandas`, `fluxopag`.
+- **Website/reference:** `https://www.figma.com/design/Rau8PgbGwiiJwRo9MHgzMW/Comandas?node-id=0-1` — identificado no README como **referência de design**, sem sugerir implantação da aplicação.
+- **Checks obrigatórios:** avaliar `python-and-mysql` na proteção da branch após revisar as permissões e o fluxo do proprietário. O workflow sozinho não bloqueia merge.
 
-1. Uma tarefa sai do Backlog quando suas dependências estiverem resolvidas.
-2. Antes de mover para In Progress, confirme os critérios de aceitação.
-3. Evite muitas frentes simultâneas; priorize terminar a modelagem do banco e estruturar a aplicação.
-4. Use Review para validar antes de encerrar uma issue.
-5. Só mova para Done depois de atualizar documentação e fechar a issue.
-6. Mudanças relevantes de código ou schema devem passar por branch e pull request.
-
-## Ordem imediata recomendada
-
-1. Consolidar a primeira etapa da issue #10 no MySQL.
-2. Modelar operação diária/caixa e estabelecimento.
-3. Iniciar #3 com a conexão Python ↔ MySQL.
-4. Planejar #19 antes das próximas mudanças destrutivas de schema.
-5. Começar #11 e #12 sobre a estrutura persistente.
-6. Implementar #21 junto do fluxo de pagamento #13.
-7. Evoluir #20 após definir a regra de baixa de estoque.
-8. Continuar em paralelo as pendências do Figma #5 a #9.
+A decisão de licença e um canal privado suportado para relatos de segurança também pertencem ao proprietário; esta organização não cria endereço de contato, versão suportada ou licença fictícia.

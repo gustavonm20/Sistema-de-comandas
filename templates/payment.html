@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Pagamento da comanda #{{ order.card_number }} — FluxoPag{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <div>
+        <a class="back-link" href="{{ url_for('order_details', order_id=order.order_id) }}">← Voltar para a comanda</a>
+        <h1>Finalizar pagamento</h1>
+        <p>Comanda #{{ order.card_number }} • {{ order.service_label }}</p>
+    </div>
+</div>
+
+{% if order.status != 'open' %}
+    <section class="panel empty-state">
+        <h3>Essa comanda já foi fechada</h3>
+        <p>Consulte a venda no histórico.</p>
+        <a class="button secondary" href="{{ url_for('history') }}">Abrir histórico</a>
+    </section>
+{% elif not order['items'] %}
+    <section class="panel empty-state">
+        <h3>A comanda está vazia</h3>
+        <p>Adicione pelo menos um produto antes de receber o pagamento.</p>
+        <a class="button primary" href="{{ url_for('order_details', order_id=order.order_id) }}">Adicionar produtos</a>
+    </section>
+{% else %}
+    <form method="post" class="content-grid payment-grid" id="payment-form" data-total="{{ order.total }}">
+        <section class="panel">
+            <div class="panel-heading"><h2>Forma de pagamento</h2></div>
+            <div class="payment-options">
+                <label class="payment-option">
+                    <input type="radio" name="payment_method" value="cash" required>
+                    <span class="payment-symbol">R$</span>
+                    <span><strong>Dinheiro</strong><small>Calcular troco</small></span>
+                </label>
+                <label class="payment-option">
+                    <input type="radio" name="payment_method" value="pix" required>
+                    <span class="payment-symbol">◆</span>
+                    <span><strong>Pix</strong><small>Pagamento instantâneo</small></span>
+                </label>
+                <label class="payment-option">
+                    <input type="radio" name="payment_method" value="debit" required>
+                    <span class="payment-symbol">▣</span>
+                    <span><strong>Débito</strong><small>Cartão de débito</small></span>
+                </label>
+                <label class="payment-option">
+                    <input type="radio" name="payment_method" value="credit" required>
+                    <span class="payment-symbol">▰</span>
+                    <span><strong>Crédito</strong><small>Cartão de crédito</small></span>
+                </label>
+            </div>
+
+            <div class="cash-fields" id="cash-fields" hidden>
+                <label>
+                    <span>Valor recebido</span>
+                    <input id="cash-received" type="text" name="cash_received"
+                           inputmode="decimal" placeholder="R$ 0,00">
+                </label>
+                <div class="change-preview">
+                    <span>Troco</span>
+                    <strong id="change-value">R$ 0,00</strong>
+                </div>
+            </div>
+        </section>
+
+        <aside class="panel payment-summary">
+            <div class="panel-heading"><h2>Resumo</h2></div>
+            <dl>
+                <div><dt>Comanda</dt><dd>#{{ order.card_number }}</dd></div>
+                <div><dt>Atendimento</dt><dd>{{ order.service_label }}</dd></div>
+                <div><dt>Quantidade de itens</dt><dd>{{ order.item_count }}</dd></div>
+            </dl>
+            <div class="payment-total">
+                <span>Total a receber</span>
+                <strong>{{ format_money(order.total) }}</strong>
+            </div>
+            <button class="button primary full-button" type="submit">Confirmar pagamento</button>
+            <p class="helper-text">Ao confirmar, a comanda será fechada e o cartão poderá ser utilizado novamente.</p>
+        </aside>
+    </form>
+{% endif %}
+{% endblock %}

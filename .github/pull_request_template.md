@@ -1,27 +1,23 @@
-## O que foi alterado?
+## Problema e resultado
 
-Descreva as mudanças realizadas neste pull request.
+Explique a necessidade, o que muda e o comportamento resultante.
 
-## Issue relacionada
+## Issues e escopo
 
-Closes #
+Relacionada a #... . Use fechamento automático apenas quando todos os critérios da issue forem satisfeitos e a entrega puder ser aceita com esta PR.
 
-## Como testar
+## Evidência de verificação
 
-1. Execute o projeto.
-2. Acesse o fluxo alterado.
-3. Verifique os critérios de aceitação.
+Informe comandos, ambiente, resultados e execução da CI. Diferencie teste unitário, MySQL real, protótipo histórico e revisão visual. Liste verificações não realizadas e por quê.
 
-## Checklist
+## Decisões e lacunas
 
-- [ ] O código executa sem erros conhecidos.
-- [ ] As regras de negócio foram respeitadas.
-- [ ] Os testes relevantes foram adicionados ou atualizados.
-- [ ] A documentação foi atualizada quando necessário.
-- [ ] Mudanças visuais seguem o protótipo do Figma.
-- [ ] Os commits são pequenos, focados e possuem mensagens descritivas.
-- [ ] Não foram adicionados segredos ou arquivos locais.
+Registre impactos no schema, compatibilidade, regras ambíguas e trabalho restante. Imagens devem dizer se são design ou aplicação.
 
-## Evidências
+## Revisão
 
-Adicione screenshots, GIFs, logs ou outras evidências quando aplicável.
+- [ ] Stack, nomes históricos e invariantes preservados.
+- [ ] Validação proporcional ao risco executada e descrita.
+- [ ] Setup, documentação e status refletem o código.
+- [ ] Sem segredos, dados reais ou arquivos locais desnecessários.
+- [ ] Origem de código/assets recuperados ou externos registrada.

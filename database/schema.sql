@@ -378,4 +378,3 @@ GROUP BY
     YEAR(sold_at),
     MONTH(sold_at),
     DATE_FORMAT(sold_at, '%m/%Y');
-

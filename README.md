@@ -54,7 +54,7 @@ Consulte a [origem dos arquivos e decisões de integração](docs/PROVENANCE.md)
 | Python 3.10+ | Validação, regras de negócio, dinheiro com `Decimal` e testes com `unittest` |
 | Flask e Jinja | Rotas, formulários, mensagens e geração das páginas HTML |
 | HTML e CSS | Estrutura das telas, layout e temas |
-| JavaScript puro | Menu, tema, confirmação e prévia de troco |
+| JavaScript | Menu, tema, confirmação e prévia de troco |
 | SQL e MySQL 8.0.16+ / 8.4 | Persistência, relações, constraints, views e transações |
 | mysql-connector-python | Conexões e consultas SQL parametrizadas |
 | python-dotenv | Leitura do `.env` local; variáveis do ambiente têm precedência |
@@ -94,7 +94,7 @@ python initialize_database.py --user root --ask-password
 python app.py
 ```
 
-Abra `http://127.0.0.1:5000`, cadastre produtos e inicie a operação em **Conta e operação**. O inicializador recusa bancos que já contêm tabelas: **o schema novo não é uma migration do banco antigo**. Preserve seus dados e consulte [compatibilidade](docs/DATABASE.md).
+Cadastre produtos e inicie a operação em **Conta e operação**. O inicializador recusa bancos que já contêm tabelas: **o schema novo não é uma migration do banco antigo**. Preserve seus dados e consulte [compatibilidade](docs/DATABASE.md).
 
 Linux/macOS usam `python3 -m venv .venv`, `source .venv/bin/activate` e `cp .env.example .env`; o restante é igual. Para o treino inicial, execute separadamente `python "protótipo-inicial.py"`.
 
@@ -107,7 +107,7 @@ Sem `RUN_MYSQL_TESTS=1`, os testes de banco são explicitamente ignorados. O [gu
 
 ## Regras e limites importantes
 
-- A comanda possui quatro dígitos e só pode ter um atendimento aberto por vez.
+- A comanda possui, obrigatoriamente, quatro dígitos e só pode ter um atendimento aberto por vez.
 - O fechamento libera o número e preserva pedido, itens e venda.
 - Produtos inativos não entram em novos consumos; os itens conservam o preço registrado.
 - A aplicação exige preço positivo; o banco mantém a restrição histórica `>= 0`. Produtos gratuitos ainda dependem de decisão explícita.

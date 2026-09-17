@@ -1,97 +1,40 @@
-# Como contribuir
+# Como contribuir com o FluxoPag
 
-Este projeto usa issues e pull requests para manter o desenvolvimento organizado.
+Comece pelo [README](README.md), pelo [setup](docs/SETUP.md) e pela [matriz de evidências](docs/STATUS.md). Consulte a issue existente antes de abrir outra; catálogo é #11, transação é #21 e migrations são #19.
 
-## Fluxo recomendado
+## Fluxo de trabalho
 
-1. Escolha uma issue aberta.
-2. Leia o objetivo, as dependências e os critérios de aceitação.
-3. Crie uma branch a partir da `main`.
-4. Faça alterações pequenas e relacionadas a uma única tarefa.
-5. Teste localmente.
-6. Abra um pull request relacionando a issue.
+1. Descreva o problema, o comportamento esperado e como verificá-lo em uma issue.
+2. Crie uma branch a partir da base acordada. A consolidação atual está em `chore/consolidar-fluxopag`; não misture alterações não relacionadas.
+3. Faça mudanças pequenas e commits concisos em português, como `Correção do total da comanda` ou `Documentação da operação diária`, seguindo o histórico do repositório.
+4. Execute os testes pertinentes, revise o diff e abra uma PR com evidência e limitações.
+5. Mova para revisão quando a entrega estiver pronta; encerre a issue somente após critérios satisfeitos e aceitação/integração. Use `Relacionada a #...` enquanto houver trabalho restante.
 
-## Padrão de branches
+Não reescreva commits históricos, force-push ou faça merge sem a autorização aplicável. Não atribua prazos ou responsáveis sem acordo.
 
-```text
-feature/nome-da-funcionalidade
-fix/nome-da-correcao
-docs/nome-da-documentacao
-test/nome-dos-testes
-refactor/nome-da-refatoracao
+## Código e documentação
+
+- Stack: Python, Flask, HTML, CSS, JavaScript puro e SQL MySQL. Dependências devem ter uma necessidade concreta.
+- Novos identificadores de aplicação em inglês; interface, documentação, issues e mensagens em português brasileiro.
+- Preserve nomes históricos e SQL existentes. O schema atual está em inglês; o nome `comandas_db` é preservado. Mudanças exigem compatibilidade explícita.
+- SQL com valores parametrizados. Dinheiro com `Decimal`, nunca `float` como fonte do cálculo financeiro.
+- Quatro dígitos, cartão com um pedido aberto, snapshots, inatividade e fechamento atômico são invariantes do domínio.
+- Atualize documentos existentes e índice, sem criar guias paralelos sobre o mesmo assunto. Identifique se uma imagem é Figma ou aplicação.
+- Não afirme função pronta por existir em um roteiro. Vincule a execução ao commit/CI e documente os limites.
+
+## Verificação
+
+```powershell
+python -m unittest discover -s tests -v
+python scripts/check_docs.py
 ```
 
-Exemplos:
+[Testes com MySQL real](docs/TESTING.md) exigem banco descartável `fluxopag_test_*` e `RUN_MYSQL_TESTS=1`. Sem isso, os testes SQL aparecem como ignorados. Não execute limpeza ou testes destrutivos no banco de trabalho.
 
-```text
-feature/abrir-comanda
-feature/fechamento-caixa
-docs/modelagem-banco
-fix/calculo-troco
-```
+Verifique novas regras ou integrações com testes que exercitem o comportamento. Mudanças simples de texto não precisam de testes artificiais. A revisão visual deve incluir estado vazio, erro, foco de teclado e largura reduzida. Não coloque dados reais em screenshots ou seeds.
 
-## Padrão de commits
+## Configuração e publicação
 
-Use mensagens diretas no formato abaixo:
+`.env`, credenciais, arquivos locais de dados e ambientes virtuais não devem ser commitados. Use `.env.example`. Não exponha o servidor de desenvolvimento enquanto faltarem autenticação e CSRF (#24). Não foi confirmado um canal privado de relato de vulnerabilidades; evite publicar segredos em issues. A definição de um canal apoiado pelo proprietário permanece pendente, sem endereço inventado.
 
-```text
-tipo: descrição curta
-```
-
-Tipos recomendados:
-
-- `feat`: nova funcionalidade;
-- `fix`: correção de erro;
-- `docs`: documentação;
-- `test`: testes;
-- `refactor`: melhoria interna sem alterar comportamento;
-- `chore`: configuração e manutenção.
-
-Exemplos:
-
-```text
-feat: adicionar abertura de comanda
-fix: corrigir cálculo do troco
-docs: atualizar regras de fechamento do caixa
-test: validar bloqueio de comandas abertas
-```
-
-### Escopo de cada commit
-
-- Cada commit deve representar uma alteração lógica e fácil de compreender.
-- Evite agrupar arquivos sem relação apenas para reduzir a quantidade de commits.
-- Documentação, configuração, testes e funcionalidades podem usar commits separados.
-- A mensagem deve explicar o resultado da alteração, não apenas citar o nome do arquivo.
-- O projeto deve permanecer executável sempre que possível após cada commit.
-
-## Código
-
-- Identificadores do código Python devem ser escritos em inglês.
-- Tabelas, colunas, views, índices e valores de domínio do banco MySQL devem ser escritos em português.
-- Textos exibidos ao usuário devem permanecer em português.
-- Evite funções muito longas e responsabilidades misturadas.
-- Valide entradas antes de alterar dados.
-- Regras financeiras devem possuir testes.
-- Não envie senhas, tokens ou arquivos `.env` ao repositório.
-
-## Pull requests
-
-Um pull request deve:
-
-- possuir título claro;
-- explicar o que foi alterado;
-- citar a issue relacionada usando `Closes #número` quando aplicável;
-- informar como a alteração foi testada;
-- incluir screenshots quando houver mudança visual;
-- manter o escopo restrito à tarefa proposta.
-
-## Definition of Done
-
-Uma tarefa pode ser considerada concluída quando:
-
-- os critérios de aceitação da issue foram atendidos;
-- o código executa sem erros conhecidos;
-- os testes relevantes passam;
-- a documentação foi atualizada quando necessário;
-- a interface está consistente com o Figma, quando aplicável;
-- o pull request foi integrado à `main`.
+Não existe licença definida no repositório auditado. A escolha cabe ao proprietário; contribuições devem informar a origem de código e assets externos. Não acrescente um arquivo de licença ou badge por suposição.

@@ -1,121 +1,23 @@
 # Roadmap do FluxoPag
 
-Este roadmap separa o trabalho de **design**, **fundação técnica**, **MVP**, **operação**, **indicadores** e **qualidade**. As issues são a fonte de acompanhamento detalhado.
+[README](README.md) · [Evidências](docs/STATUS.md) · [Kanban existente](https://github.com/users/gustavonm20/projects/2/views/4)
 
-## Marco atual
+Revisado em 17/09/2026. As fases organizam dependências; não são versões lançadas, percentuais ou compromissos de prazo. A entrega consolidada está em revisão na branch `chore/consolidar-fluxopag`. Nenhuma issue foi encerrada só pela publicação dos arquivos.
 
-O projeto entrou na fundação técnica do banco de dados. A primeira versão do schema MySQL já cobre categorias, produtos, comandas físicas, pedidos, itens, vendas e views para histórico e resumos, mantendo alinhamento com os fluxos definidos no Figma.
+| Fase | Base disponível | Próxima entrega verificável | Issues |
+| --- | --- | --- | --- |
+| Fundamentos | Python histórico, schema ampliado, Flask e configuração recuperados | Revisar setup, decisões abertas e evolução do banco sem perda | [#1](https://github.com/gustavonm20/Sistema-de-comandas/issues/1), [#3](https://github.com/gustavonm20/Sistema-de-comandas/issues/3), [#10](https://github.com/gustavonm20/Sistema-de-comandas/issues/10), [#19](https://github.com/gustavonm20/Sistema-de-comandas/issues/19) |
+| Catálogo persistente | Cadastro, busca, edição e estado testados no MySQL | Revisar interface e aceitar os critérios da issue original | [#11](https://github.com/gustavonm20/Sistema-de-comandas/issues/11) |
+| Ciclo de comandas | Número reutilizável, itens, total e histórico de preço | Resolver cancelamento vazio, reajuste durante atendimento e corrida com fechamento | [#12](https://github.com/gustavonm20/Sistema-de-comandas/issues/12), [#21](https://github.com/gustavonm20/Sistema-de-comandas/issues/21) |
+| Pagamento e histórico | Registro local, troco, venda única e rollback testados | Validar formulários/filtros e transação com requisições simultâneas | [#13](https://github.com/gustavonm20/Sistema-de-comandas/issues/13), [#21](https://github.com/gustavonm20/Sistema-de-comandas/issues/21) |
+| Operação e caixa | Abertura, bloqueio e conferência sequenciais testados | Bloquear criação concorrente de pedido no encerramento e revisar UX | [#14](https://github.com/gustavonm20/Sistema-de-comandas/issues/14), [#5](https://github.com/gustavonm20/Sistema-de-comandas/issues/5), [#6](https://github.com/gustavonm20/Sistema-de-comandas/issues/6), [#7](https://github.com/gustavonm20/Sistema-de-comandas/issues/7) |
+| Resumos | Dia, semana e mês consultam vendas persistidas | Selecionar operação/período, comparar bases equivalentes, tratar ausência de dados e gráfico fora de 08h–20h | [#15](https://github.com/gustavonm20/Sistema-de-comandas/issues/15), [#8](https://github.com/gustavonm20/Sistema-de-comandas/issues/8) |
+| Integração visual | Marca, 15 templates, CSS, JS, 16 frames hi-fi e 10 low-fi | Completar conexões do Figma e revisar teclado, contraste, responsividade e estados | [#2](https://github.com/gustavonm20/Sistema-de-comandas/issues/2), [#9](https://github.com/gustavonm20/Sistema-de-comandas/issues/9), [#16](https://github.com/gustavonm20/Sistema-de-comandas/issues/16) |
+| Verificação e acesso | Testes locais, integração MySQL e CI aprovados | Concorrência, migrations, revisão Windows, política de lint e autenticação/CSRF | [#17](https://github.com/gustavonm20/Sistema-de-comandas/issues/17), [#24](https://github.com/gustavonm20/Sistema-de-comandas/issues/24) |
+| Extensões posteriores | Estoque descrito, sem implementação | Definir unidades, momento da baixa, ajustes e estornos antes de modelar | [#20](https://github.com/gustavonm20/Sistema-de-comandas/issues/20) |
 
-## Legenda
+A próxima sequência prática é revisar a entrega do catálogo #11 e corrigir o protocolo de concorrência da #21, coordenado com #14. Para qualquer banco com dados anteriores, a #19 é um pré-requisito. Antes de acesso externo, concluir #24. Estoque não deve impedir a aceitação do catálogo ou a consolidação básica do atendimento.
 
-- ✅ Concluído
-- 🚧 Em andamento
-- ⏳ Planejado
+O protótipo terminal permanece como aprendizado; não recebe novas funções para substituir a web. Não há compromisso com integração bancária, emissão fiscal, múltiplas lojas ou aplicativo móvel. Tema escuro já tem código e deve ser revisado, não anunciado como algo ainda inexistente.
 
-## Fase 0 — Planejamento e prototipação
-
-Status: 🚧 Em andamento
-
-- 🚧 #1 — Definir funcionalidades e regras de negócio
-- 🚧 #2 — Completar protótipo hi-fi e low-fi no Figma
-- ⏳ #5 — Criar fluxo de abertura de caixa
-- ⏳ #6 — Bloquear fechamento do dia com comandas abertas
-- ⏳ #7 — Criar confirmação e fechamento de caixa
-- ⏳ #8 — Adicionar comparativos aos resumos
-- ⏳ #9 — Completar low-fi e organizar as telas
-
-## Fase 1 — Fundação técnica
-
-Status: 🚧 Em andamento
-
-- ⏳ #3 — Estruturar o projeto e configurar o ambiente
-- 🚧 #10 — Modelar banco de dados MySQL e entidades do domínio
-- ⏳ #16 — Implementar layout base e navegação
-- ⏳ #19 — Implementar migrations versionadas do MySQL
-
-### Já entregue na modelagem
-
-- ✅ MySQL 8 definido como banco relacional do projeto.
-- ✅ `categorias` e `produtos`.
-- ✅ `comandas` com número fixo de quatro dígitos.
-- ✅ `pedidos` com proteção contra duas comandas abertas para o mesmo número.
-- ✅ `itens_pedido` com quantidade, preço histórico e observações.
-- ✅ `vendas` com forma de pagamento e data da venda.
-- ✅ constraints de integridade.
-- ✅ índices iniciais.
-- ✅ views para produtos, comandas abertas, detalhes, histórico e resumos.
-- ✅ documentação inicial do banco.
-
-### Ainda falta na fundação
-
-- estrutura de estabelecimento/autenticação;
-- operação diária e caixa;
-- migrations;
-- transação atômica de fechamento da comanda;
-- integração Python ↔ MySQL.
-
-## Fase 2 — MVP operacional
-
-Status: ⏳ Planejado
-
-- ⏳ #11 — Catálogo e gerenciamento de produtos
-- ⏳ #12 — Fluxo completo de comandas
-- ⏳ #13 — Pagamentos e histórico de vendas
-- ⏳ #21 — Tornar fechamento da comanda transacional
-
-### Resultado esperado
-
-O estabelecimento consegue cadastrar produtos, abrir uma comanda, adicionar itens, receber o pagamento, fechar a comanda e consultar a venda sem risco de persistência parcial.
-
-## Fase 3 — Operação diária, caixa e estoque
-
-Status: ⏳ Planejado
-
-- ⏳ #14 — Abertura, operação e fechamento do caixa
-- ⏳ #20 — Controle de estoque e movimentações
-
-### Resultado esperado
-
-O estabelecimento abre o dia com um valor inicial, opera somente durante uma sessão ativa, encerra o caixa com conferência e mantém movimentações de estoque rastreáveis.
-
-## Fase 4 — Indicadores e gestão
-
-Status: 🚧 Base de dados preparada
-
-- ⏳ #15 — Resumos diário, semanal e mensal
-
-As views `vw_resumo_diario`, `vw_resumo_semanal` e `vw_resumo_mensal` já fornecem a base de faturamento, quantidade de vendas e ticket médio. Comparações de período, produtos mais vendidos e gráficos ainda serão implementados.
-
-## Fase 5 — Qualidade e entrega
-
-Status: ⏳ Planejado
-
-- ⏳ #17 — Testes, lint e integração contínua
-- ⏳ documentar API e arquitetura;
-- ⏳ adicionar Docker;
-- ⏳ configurar ambiente de produção;
-- ⏳ criar primeira release estável.
-
-## Ordem recomendada de execução
-
-1. Continuar a modelagem da issue #10 até operação diária e caixa.
-2. Estruturar o projeto da issue #3 e integrar Python ao MySQL.
-3. Preparar migrations na #19 antes de mudanças estruturais mais profundas.
-4. Implementar produtos e comandas: #11 e #12.
-5. Implementar fechamento financeiro e histórico: #13 + #21.
-6. Implementar operação diária: #14.
-7. Evoluir estoque: #20.
-8. Consumir as views e concluir os indicadores: #15.
-9. Finalizar os fluxos pendentes do Figma em paralelo: #5 a #9.
-10. Evoluir testes e automação continuamente: #17.
-
-## Fora do primeiro MVP
-
-- múltiplos funcionários e permissões avançadas;
-- cancelamentos e estornos completos;
-- reabertura controlada de um dia encerrado;
-- exportação de relatórios em PDF e Excel;
-- tema escuro;
-- backup automatizado;
-- auditoria avançada;
-- integração fiscal.
+As regras de movimentação e as alterações pendentes no GitHub Projects estão em [docs/KANBAN.md](docs/KANBAN.md). Critérios satisfeitos e entrega aceita são necessários antes de marcar algo como concluído.

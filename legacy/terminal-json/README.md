@@ -1,28 +1,16 @@
-# FluxoPag — Protótipo de Comandas
+# FluxoPag — evolução histórica do terminal
 
-Protótipo completo em Python para terminal. Os dados ficam salvos automaticamente em JSON.
+[Voltar ao projeto](../../README.md) · [Origem](../../docs/PROVENANCE.md)
 
-## Funcionalidades
+Código recuperado de `FluxoPag_Prototipo_Final.zip`, preservado como etapa de aprendizado. A persistência é um arquivo JSON local; esta pasta não é o backend da aplicação Flask nem uma alternativa de banco para a versão MySQL.
 
-- Cadastro, listagem, pesquisa, edição e desativação de produtos.
-- 20 comandas fixas, numeradas e reutilizáveis.
-- Inclusão e remoção de produtos, visualização e fechamento com confirmação.
-- Pagamentos em dinheiro, Pix, crédito ou débito.
-- Histórico permanente das vendas.
-- Abertura e fechamento do dia, com bloqueio enquanto houver comandas abertas.
-- Conferência do dinheiro e cálculo de diferença de caixa.
-- Resumos separados por dia, semana e mês, com faturamento, ticket médio, formas de pagamento, produtos mais vendidos e comparação com o período anterior.
+Os módulos exploram produtos, vinte comandas, itens, pagamento registrado, histórico, operação diária, conferência de caixa e consultas de resumos no terminal. Os seis testes existentes passaram na revisão de 17/09/2026; isso não comprova todos os caminhos interativos nem garante equivalência com as regras da web. A numeração interna usa inteiros, diferentemente do `CHAR(4)` da aplicação atual.
 
-## Como executar
+Com Python 3.10+, dentro desta pasta:
 
-1. Instale o Python 3.10 ou superior.
-2. Abra o terminal dentro desta pasta.
-3. Execute:
-
-```bash
+```powershell
 python main.py
+python -m unittest discover -p "test_*.py" -v
 ```
 
-No Windows, caso `python` não funcione, use `py main.py`.
-
-O arquivo `data/database.json` será criado automaticamente na primeira execução. Não é necessário instalar bibliotecas.
+No Windows, `py main.py` também pode ser usado. Não são necessárias dependências externas. `data/database.json` é criado localmente e ignorado pelo Git. Use dados fictícios; não há importação desse arquivo para MySQL nem migração automática para a web.

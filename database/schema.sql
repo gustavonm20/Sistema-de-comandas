@@ -1,108 +1,93 @@
-CREATE DATABASE IF NOT EXISTS comandas_db;
+-- Inicialização de banco NOVO. Não é uma migration. Consulte docs/DATABASE.md.
+CREATE DATABASE IF NOT EXISTS comandas_db
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
 
 USE comandas_db;
 
+CREATE TABLE IF NOT EXISTS establishments (
+    establishment_id INT PRIMARY KEY,
+    name VARCHAR(120) NOT NULL,
+    email VARCHAR(150) NOT NULL,
+    business_type VARCHAR(100) NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
 
 CREATE TABLE IF NOT EXISTS categories (
     category_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL UNIQUE
+    name VARCHAR(100) NOT NULL,
+    active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    UNIQUE (name)
 );
-
-
-INSERT IGNORE INTO categories (name)
-VALUES
-    ('Bebidas'),
-    ('Frios'),
-    ('Lanches'),
-    ('Pizzas'),
-    ('Sobremesas');
-
 
 CREATE TABLE IF NOT EXISTS products (
     product_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    price DECIMAL(10,2) NOT NULL,
+    normalized_name VARCHAR(100) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
     category_id INT NOT NULL,
     active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
+    INDEX idx_products_category_active (category_id, active),
+    UNIQUE (normalized_name),
     CHECK (price >= 0),
-
     FOREIGN KEY (category_id)
         REFERENCES categories(category_id)
 );
 
-
-INSERT INTO products (name, price, category_id)
-SELECT
-    'Coca-Cola',
-    7.50,
-    category_id
-FROM categories
-WHERE name = 'Bebidas'
-AND NOT EXISTS (
-    SELECT 1
-    FROM products
-    WHERE name = 'Coca-Cola'
-);
-
-
-INSERT INTO products (name, price, category_id)
-SELECT
-    'X-Salada',
-    22.90,
-    category_id
-FROM categories
-WHERE name = 'Lanches'
-AND NOT EXISTS (
-    SELECT 1
-    FROM products
-    WHERE name = 'X-Salada'
-);
-
-
-INSERT INTO products (name, price, category_id)
-SELECT
-    'Pudim',
-    9.00,
-    category_id
-FROM categories
-WHERE name = 'Sobremesas'
-AND NOT EXISTS (
-    SELECT 1
-    FROM products
-    WHERE name = 'Pudim'
-);
-
-
 CREATE TABLE IF NOT EXISTS command_cards (
     card_id INT AUTO_INCREMENT PRIMARY KEY,
-    card_number CHAR(4) NOT NULL UNIQUE,
+    card_number CHAR(4) NOT NULL,
     active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CHECK (
-        card_number REGEXP '^[0-9]{4}$'
-    )
+    UNIQUE (card_number),
+    CHECK (card_number REGEXP '^[0-9]{4}$')
 );
 
+CREATE TABLE IF NOT EXISTS daily_operations (
+    operation_id INT AUTO_INCREMENT PRIMARY KEY,
+    status ENUM('open', 'closed') NOT NULL DEFAULT 'open',
+    opening_cash DECIMAL(10, 2) NOT NULL,
+    expected_cash DECIMAL(10, 2) NULL,
+    counted_cash DECIMAL(10, 2) NULL,
+    difference_amount DECIMAL(10, 2) NULL,
+    discrepancy_note VARCHAR(255) NULL,
+    opened_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    closed_at DATETIME NULL,
 
-INSERT IGNORE INTO command_cards (card_number)
-VALUES
-    ('0001'),
-    ('0002'),
-    ('0003'),
-    ('0004'),
-    ('0005');
+    open_operation_marker TINYINT
+        GENERATED ALWAYS AS (
+            CASE
+                WHEN status = 'open' THEN 1
+                ELSE NULL
+            END
+        ) STORED,
 
+    UNIQUE (open_operation_marker),
+    CHECK (opening_cash >= 0),
+    CHECK (
+        (status = 'open' AND closed_at IS NULL)
+        OR
+        (status = 'closed' AND closed_at IS NOT NULL)
+    )
+);
 
 CREATE TABLE IF NOT EXISTS orders (
     order_id INT AUTO_INCREMENT PRIMARY KEY,
     card_id INT NOT NULL,
-
-    status ENUM(
-        'open',
-        'closed'
-    ) NOT NULL DEFAULT 'open',
-
+    operation_id INT NOT NULL,
+    service_type ENUM('table', 'counter', 'pickup') NOT NULL DEFAULT 'counter',
+    service_label VARCHAR(100) NULL,
+    note VARCHAR(255) NULL,
+    status ENUM('open', 'closed') NOT NULL DEFAULT 'open',
     opened_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     closed_at DATETIME NULL,
 
@@ -114,11 +99,12 @@ CREATE TABLE IF NOT EXISTS orders (
             END
         ) STORED,
 
+    INDEX idx_orders_status_opened (status, opened_at),
     UNIQUE (open_card_id),
-
     FOREIGN KEY (card_id)
         REFERENCES command_cards(card_id),
-
+    FOREIGN KEY (operation_id)
+        REFERENCES daily_operations(operation_id),
     CHECK (
         (status = 'open' AND closed_at IS NULL)
         OR
@@ -126,47 +112,88 @@ CREATE TABLE IF NOT EXISTS orders (
     )
 );
 
-
 CREATE TABLE IF NOT EXISTS order_items (
     order_item_id INT AUTO_INCREMENT PRIMARY KEY,
     order_id INT NOT NULL,
     product_id INT NOT NULL,
-    quantity INT NOT NULL,
-    unit_price DECIMAL(10,2) NOT NULL,
     notes VARCHAR(255) NULL,
+    product_name_snapshot VARCHAR(100) NOT NULL,
+    category_name_snapshot VARCHAR(100) NOT NULL,
+    unit_price DECIMAL(10, 2) NOT NULL,
+    quantity INT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CHECK (quantity > 0),
-
+    UNIQUE (order_id, product_id),
     CHECK (unit_price >= 0),
-
+    CHECK (quantity > 0),
     FOREIGN KEY (order_id)
         REFERENCES orders(order_id),
-
     FOREIGN KEY (product_id)
         REFERENCES products(product_id)
 );
 
-
 CREATE TABLE IF NOT EXISTS sales (
     sale_id INT AUTO_INCREMENT PRIMARY KEY,
-    order_id INT NOT NULL UNIQUE,
-    total_amount DECIMAL(10,2) NOT NULL,
-
-    payment_method ENUM(
-        'cash',
-        'credit',
-        'debit',
-        'pix'
-    ) NOT NULL,
-
+    order_id INT NOT NULL,
+    card_number_snapshot CHAR(4) NOT NULL,
+    total_amount DECIMAL(10, 2) NOT NULL,
+    payment_method ENUM('cash', 'pix', 'debit', 'credit') NOT NULL,
+    cash_received DECIMAL(10, 2) NULL,
+    change_amount DECIMAL(10, 2) NULL,
     sold_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
+    INDEX idx_sales_sold_at (sold_at),
+    INDEX idx_sales_payment_sold (payment_method, sold_at),
+    UNIQUE (order_id),
     CHECK (total_amount >= 0),
-
     FOREIGN KEY (order_id)
         REFERENCES orders(order_id)
 );
 
+CREATE TABLE IF NOT EXISTS audit_logs (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    actor VARCHAR(100) NOT NULL,
+    action VARCHAR(100) NOT NULL,
+    entity_type VARCHAR(50) NOT NULL,
+    entity_id INT NULL,
+    detail VARCHAR(255) NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO establishments (establishment_id, name, email, business_type)
+SELECT 1, 'Meu Estabelecimento', 'contato@estabelecimento.com', 'Padaria e cafeteria'
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM establishments
+    WHERE establishment_id = 1
+);
+
+INSERT INTO categories (name)
+SELECT 'Bebidas'
+WHERE NOT EXISTS (SELECT 1 FROM categories WHERE name = 'Bebidas');
+
+INSERT INTO categories (name)
+SELECT 'Frios'
+WHERE NOT EXISTS (SELECT 1 FROM categories WHERE name = 'Frios');
+
+INSERT INTO categories (name)
+SELECT 'Lanches'
+WHERE NOT EXISTS (SELECT 1 FROM categories WHERE name = 'Lanches');
+
+INSERT INTO categories (name)
+SELECT 'Pizzas'
+WHERE NOT EXISTS (SELECT 1 FROM categories WHERE name = 'Pizzas');
+
+INSERT INTO categories (name)
+SELECT 'Sobremesas'
+WHERE NOT EXISTS (SELECT 1 FROM categories WHERE name = 'Sobremesas');
+
+INSERT IGNORE INTO command_cards (card_number) VALUES
+    ('0001'), ('0002'), ('0003'), ('0004'), ('0005'),
+    ('0006'), ('0007'), ('0008'), ('0009'), ('0010'),
+    ('0011'), ('0012'), ('0013'), ('0014'), ('0015'),
+    ('0016'), ('0017'), ('0018'), ('0019'), ('0020');
 
 CREATE OR REPLACE VIEW vw_products AS
 SELECT
@@ -231,8 +258,8 @@ SELECT
     ) AS closed_at,
 
     p.product_id,
-    p.name AS product_name,
-    c.name AS category_name,
+    oi.product_name_snapshot AS product_name,
+    oi.category_name_snapshot AS category_name,
 
     oi.quantity,
     oi.unit_price,
@@ -266,7 +293,7 @@ CREATE OR REPLACE VIEW vw_sales_history AS
 SELECT
     s.sale_id,
     s.order_id,
-    cc.card_number,
+    s.card_number_snapshot AS card_number,
     s.total_amount,
     s.payment_method,
 
@@ -298,7 +325,7 @@ SELECT
     DATE(sold_at) AS summary_date,
 
     DATE_FORMAT(
-        sold_at,
+        DATE(sold_at),
         '%d/%m/%Y'
     ) AS date_label,
 
@@ -356,29 +383,3 @@ GROUP BY
     DATE_FORMAT(sold_at, '%m/%Y');
 
 
-SELECT * FROM categories;
-
-SELECT * FROM vw_products;
-
-SELECT * FROM command_cards;
-
-SELECT * FROM vw_open_orders;
-
-SELECT * FROM vw_order_summary;
-
-SELECT * FROM vw_sales_history;
-
-SELECT * FROM vw_daily_summary;
-
-SELECT * FROM vw_weekly_summary;
-
-SELECT * FROM vw_monthly_summary;
-
-Select * from products;
-
-Select * from command_card;
-
-Select * from categories;
-
-
-SHOW TABLES;

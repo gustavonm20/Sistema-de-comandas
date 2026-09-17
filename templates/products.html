@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Produtos — FluxoPag{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <div>
+        <h1>Produtos</h1>
+        <p>Cadastre, encontre e atualize os itens vendidos.</p>
+    </div>
+    <a class="button primary" href="{{ url_for('product_create') }}">＋ Novo produto</a>
+</div>
+
+<form class="filters panel compact-panel" method="get">
+    <label>
+        <span>Pesquisar</span>
+        <input type="search" name="search" value="{{ search }}" placeholder="Nome do produto">
+    </label>
+    <label>
+        <span>Categoria</span>
+        <select name="category_id">
+            <option value="">Todas</option>
+            {% for category in categories %}
+                <option value="{{ category.category_id }}" {{ 'selected' if selected_category == category.category_id else '' }}>
+                    {{ category.name }}
+                </option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>
+        <span>Status</span>
+        <select name="status">
+            <option value="all" {{ 'selected' if selected_status == 'all' else '' }}>Todos</option>
+            <option value="active" {{ 'selected' if selected_status == 'active' else '' }}>Ativos</option>
+            <option value="inactive" {{ 'selected' if selected_status == 'inactive' else '' }}>Desativados</option>
+        </select>
+    </label>
+    <button class="button secondary" type="submit">Aplicar filtros</button>
+</form>
+
+<section class="panel">
+    {% if products %}
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Produto</th>
+                        <th>Categoria</th>
+                        <th>Preço</th>
+                        <th>Status</th>
+                        <th class="align-right">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                        <tr>
+                            <td>{{ "%02d"|format(product.product_id) }}</td>
+                            <td><strong>{{ product.name }}</strong></td>
+                            <td>{{ product.category_name }}</td>
+                            <td>{{ format_money(product.price) }}</td>
+                            <td>
+                                <span class="status-pill {{ 'success' if product.active else 'neutral' }}">
+                                    {{ 'Ativo' if product.active else 'Desativado' }}
+                                </span>
+                            </td>
+                            <td class="align-right actions">
+                                <a class="text-button" href="{{ url_for('product_edit', product_id=product.product_id) }}">Editar</a>
+                                <form method="post" action="{{ url_for('product_status', product_id=product.product_id) }}">
+                                    <input type="hidden" name="active" value="{{ 'false' if product.active else 'true' }}">
+                                    <button class="text-button {{ 'danger' if product.active else '' }}" type="submit">
+                                        {{ 'Desativar' if product.active else 'Ativar' }}
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <h3>Nenhum produto encontrado</h3>
+            <p>Altere os filtros ou cadastre um novo produto.</p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

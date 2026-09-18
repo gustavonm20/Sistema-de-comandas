@@ -2,7 +2,7 @@
 
 [Índice](README.md) · [Testes](TESTING.md)
 
-Revisão: **17/09/2026**. Base auditada: commit `9c0317fe190917e12f1966d1b454f266986e8a1d` da `main`. As entregas abaixo estão propostas na branch `chore/consolidar-fluxopag`; não foram automaticamente aceitas nem integradas.
+Revisão: **18/09/2026**. Base inicialmente auditada: commit `9c0317fe190917e12f1966d1b454f266986e8a1d`. A consolidação foi integrada à `main` pela [PR #25](https://github.com/gustavonm20/Sistema-de-comandas/pull/25), no commit `1a7830ef6bcdb8b5047fe3d760433ec8bb15d2b4`. A integração disponibiliza os fontes; não encerra requisitos ainda pendentes.
 
 ## Como ler os estados
 

@@ -5,7 +5,7 @@ Comece pelo [README](README.md), pelo [setup](docs/SETUP.md) e pela [matriz de e
 ## Fluxo de trabalho
 
 1. Descreva o problema, o comportamento esperado e como verificá-lo em uma issue.
-2. Crie uma branch a partir da base acordada. A consolidação atual está em `chore/consolidar-fluxopag`; não misture alterações não relacionadas.
+2. Crie uma branch a partir da `main` atualizada; não misture alterações não relacionadas.
 3. Faça mudanças pequenas e commits concisos em português, como `Correção do total da comanda` ou `Documentação da operação diária`, seguindo o histórico do repositório.
 4. Execute os testes pertinentes, revise o diff e abra uma PR com evidência e limitações.
 5. Mova para revisão quando a entrega estiver pronta; encerre a issue somente após critérios satisfeitos e aceitação/integração. Use `Relacionada a #...` enquanto houver trabalho restante.

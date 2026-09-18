@@ -21,7 +21,7 @@ O protótipo de terminal ajudou a praticar lógica. O Figma tornou o produto pre
 
 ## Telas, finalidade e entrega
 
-Foram encontrados **16 frames hi-fi e 10 low-fi** na página `0:1`. A tabela agrupa apenas estados relacionados para manter a leitura curta. Os links levam aos frames de design; a situação do código refere-se à branch de consolidação.
+Foram encontrados **16 frames hi-fi e 10 low-fi** na página `0:1`. A tabela agrupa apenas estados relacionados para manter a leitura curta. Os links levam aos frames de design; a situação do código refere-se à versão consolidada na `main`.
 
 | Tela / frame hi-fi | Finalidade | Estado do design | Estado da implementação | Issue |
 | --- | --- | --- | --- | --- |

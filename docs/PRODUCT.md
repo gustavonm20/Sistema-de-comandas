@@ -12,7 +12,7 @@ Os objetivos são centralizar esse registro, tornar os estados visíveis e prese
 
 ## Evolução
 
-O protótipo inicial de terminal foi criado para praticar e visualizar a lógica de Python. A evolução em JSON amplia esse treino, mas continua isolada do produto web. O Figma transformou requisitos em telas e estados. A modelagem MySQL acrescentou persistência e integridade. A versão Flask recuperada aproxima essa experiência visual do backend; a consolidação possui execução aprovada com MySQL e aguarda revisão, com lacunas de produto e integração ainda abertas.
+O protótipo inicial de terminal foi criado para praticar e visualizar a lógica de Python. A evolução em JSON amplia esse treino, mas continua isolada do produto web. O Figma transformou requisitos em telas e estados. A modelagem MySQL acrescentou persistência e integridade. A versão Flask recuperada aproxima essa experiência visual do backend; a consolidação está integrada à `main`, com execução aprovada no MySQL e lacunas de produto e integração ainda abertas.
 
 ## Escopo
 

@@ -2,9 +2,15 @@
 
 Este registro descreve mudanças verificáveis, sem criar números de versão ou lançamentos retroativos. A história completa permanece nos commits e pull requests.
 
+## Não lançado — 18/09/2026
+
+- Finalização dos guias para a `main`: instalação sem troca para branch temporária, matriz de status, roadmap e links das issues atualizados.
+- Política do Kanban reconciliada com a integração da PR #25, preservando pendências e critérios das issues.
+- CI mantida em pull requests e na `main`, removendo a referência temporária de push para a antiga branch de consolidação.
+
 ## Não lançado — 17/09/2026
 
-Entrega proposta na branch `chore/consolidar-fluxopag`, ainda sujeita a revisão:
+Consolidação integrada à `main` pela [PR #25](https://github.com/gustavonm20/Sistema-de-comandas/pull/25), no commit `1a7830ef6bcdb8b5047fe3d760433ec8bb15d2b4`:
 
 - Fontes de `FluxoPag-Flask-MySQL.zip` extraídos e consolidados: backend Flask, templates, CSS, JavaScript, assets, schema e dependências.
 - Evolução do terminal JSON recuperada em `legacy/terminal-json/`; protótipo inicial e schema anterior preservados.

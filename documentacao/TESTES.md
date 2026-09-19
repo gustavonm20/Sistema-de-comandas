@@ -2,7 +2,20 @@
 
 [Índice](README.md) · [Estado das funcionalidades](SITUACAO.md)
 
-## Evidência de 17/09/2026
+## Tradução verificada em 19/09/2026
+
+A [execução 35426696558](https://github.com/gustavonm20/Sistema-de-comandas/actions/runs/35426696558), no registro de alteração `a2b6aebdced430afb06dc20d06aed58915d36535`, passou com Python 3.12 e **MySQL 8.4 real**. Foram executados **41 testes da aplicação, incluindo 17 com MySQL**, mais **oito testes do terminal JSON**, verificação de sintaxe JavaScript e 142 ligações/imagens em 22 documentos.
+
+Os testes com banco incluem os 12 cenários anteriores, um fluxo por formulários HTTP e quatro cenários de conversão. O fluxo cadastra e edita produto, abre operação e pedido, inclui e altera itens, registra pagamento com troco, desativa produto e fecha o caixa. As respostas HTTP e os registros persistidos são conferidos; erros de programação propagam durante os testes.
+
+A conversão usa a estrutura original extraída do registro Git `151b44a621ddda3198c00e65c90aee0b229f2d7f`. Confere valores e preços históricos, preservação da origem, recusa de destino ocupado/igual, rejeição de estrutura incompatível e reversão em caso de falha. Os dois novos testes do terminal verificam a leitura do JSON antigo sem sobrescrevê-lo e a recusa de chaves duplicadas entre idiomas.
+
+A primeira execução desta tradução encontrou consultas dinâmicas e parâmetros de redirecionamento com nomes antigos. Esses pontos foram corrigidos antes da execução aprovada acima.
+
+Localmente, sem servidor MySQL, passaram 24 testes da aplicação e oito do terminal; os 17 testes MySQL ficaram explicitamente ignorados. A prova da integração vem do serviço isolado no GitHub Actions. As 21 rotas foram conferidas contra a tabela de documentação. Não foi executada uma revisão visual completa em navegador nesta tradução.
+
+## Evidência histórica de 17/09/2026
+
 
 A [execução 35213699602 do GitHub Actions](https://github.com/gustavonm20/Sistema-de-comandas/actions/runs/35213699602), no registro de alteração `2adc6900b09f988ef975e285207b57dcab842e10`, terminou com sucesso. O tarefa usou Python 3.12 e **MySQL Servidor 8.4.11 real**, em serviço isolado. Executou inicialização, **36 testes da aplicação (12 de integração MySQL)** e **6 testes do terminal JSON**. Não houve substituição por SQLite ou banco em memória.
 
@@ -39,7 +52,7 @@ Sem `EXECUTAR_TESTES_MYSQL=1`, a saída informa `skipped` para os testes do banc
 
 ## Executar integração real
 
-Use um banco **descartável** cujo nome comece por `fluxopag_teste_`. A suíte apaga registros das tabelas de negócio em cada teste. Nunca use o banco de trabalho.
+Use um banco **descartável** cujo nome comece por `fluxopag_teste_`. A suíte apaga registros das tabelas de negócio em cada teste. Os testes de conversão também criam e removem bancos derivados, terminados em `_origem` e `_destino`, sempre com o mesmo prefixo de teste. Use um usuário autorizado apenas no ambiente descartável. Nunca use o banco de trabalho.
 
 Em outro terminal PowerShell, configure o ambiente de teste; esses valores prevalecem sobre `.env`:
 
@@ -53,7 +66,7 @@ python -m unittest discover -s testes -p 'teste_*.py' -v
 Remove-Item Env:EXECUTAR_TESTES_MYSQL, Env:MYSQL_BANCO, Env:MYSQL_USUARIO, Env:MYSQL_SENHA
 ```
 
-`-MaskInput` exige PowerShell 7.1+. No Windows PowerShell 5.1, use um usuário de teste e configure a senha em um `.env` local temporário ignorado pelo Git; não a inclua no histórico do terminal. Outra opção é executar a mesma suíte pela rotina. Se o banco de testes já estiver inicializado, pule o inicializador: a suíte faz a limpeza controlada. O prefixo é verificado antes de qualquer `DELETE`.
+`-MaskInput` exige PowerShell 7.1+. No Windows PowerShell 5.1, use um usuário de teste e configure a senha em um `.env` local temporário ignorado pelo Git; não a inclua no histórico do terminal. Outra opção é executar a mesma suíte pela rotina. Se o banco de testes já estiver inicializado, pule o inicializador: a suíte faz a limpeza controlada. O prefixo é verificado antes de qualquer limpeza. A rotina obtém o histórico Git completo para ler a estrutura de referência; uma cópia rasa precisa desse registro antes dos testes de conversão.
 
 No Linux/macOS, exporte as mesmas variáveis e use `read -rs MYSQL_SENHA; export MYSQL_SENHA` para não exibir a senha. Mantenha Python e MySQL no mesmo fuso; a integração contínua configura `America/Sao_Paulo` para ambos.
 
@@ -68,4 +81,4 @@ python -m unittest discover -p "teste_*.py" -v
 
 [verificar.yml](../.github/workflows/verificar.yml) instala as três dependências, sobe MySQL, inicializa banco isolado e executa aplicação, legado e ligações. Usa `unittest`, já presente nos artefatos; não exige adotar Pytest apenas por constar de um plano antigo. A rotina não configura proteção do ramo: tornar verificações obrigatórias é uma configuração administrativa separada.
 
-Ainda faltam: conexões concorrentes (#21, #14), migrações com dados antigos (#19), autenticação/CSRF (#24), acessibilidade e navegação real em computador/tablet (#16), revisão da instalação no Windows, testes completos dos filtros/POSTs HTTP e cenários de períodos sem dados/virada de ano (#15, #17). Não existe percentual de cobertura medido nem medição de desempenho publicado.
+Ainda faltam: conexões concorrentes (#21, #14), migrações gerais e outras variantes antigas (#19), autenticação/CSRF (#24), acessibilidade e navegação real em computador/tablet (#16), revisão da instalação no Windows, testes completos dos filtros/POSTs HTTP e cenários de períodos sem dados/virada de ano (#15, #17). Não existe percentual de cobertura medido nem medição de desempenho publicado.

@@ -2,7 +2,7 @@
 
 [Índice](README.md) · [Testes](TESTES.md)
 
-Revisão: **18/09/2026**. Base inicialmente auditada: registro de alteração `9c0317fe190917e12f1966d1b454f266986e8a1d`. A consolidação foi integrada à `main` pela [solicitação de integração #25](https://github.com/gustavonm20/Sistema-de-comandas/pull/25), no registro de alteração `1a7830ef6bcdb8b5047fe3d760433ec8bb15d2b4`. A integração disponibiliza os fontes; não encerra requisitos ainda pendentes.
+Revisão: **19/09/2026**. Base inicialmente auditada: registro de alteração `9c0317fe190917e12f1966d1b454f266986e8a1d`. A consolidação foi integrada à `main` pela [solicitação de integração #25](https://github.com/gustavonm20/Sistema-de-comandas/pull/25), no registro de alteração `1a7830ef6bcdb8b5047fe3d760433ec8bb15d2b4`. A tradução mantém MySQL e o histórico, com [41 testes da aplicação e oito históricos aprovados](https://github.com/gustavonm20/Sistema-de-comandas/actions/runs/35426696558). A integração disponibiliza os fontes; não encerra requisitos ainda pendentes.
 
 ## Como ler os estados
 
@@ -17,7 +17,7 @@ Um teste estrutural, uma simulação ou um teste do terminal JSON não comprova 
 | Recurso | Estado do código | Evidência principal | Execução | Projeto visual / tarefa |
 | --- | --- | --- | --- | --- |
 | Protótipo inicial | Artefato histórico preservado; catálogo em memória, outros menus são esboços | [protótipo-inicial.py](../protótipo-inicial.py) | Sintaxe e abertura/saída do menu | Treino anterior |
-| Evolução terminal JSON | Histórico; lógica e persistência de arquivo | [legado/terminal-json](../legado/terminal-json/README.md) | 6 testes locais aprovados | Não é a aplicação MySQL |
+| Evolução terminal JSON | Histórico; lógica e persistência de arquivo | [legado/terminal-json](../legado/terminal-json/README.md) | 8 testes aprovados, incluindo leitura do formato antigo | Não é a aplicação MySQL |
 | Conversão de dinheiro e períodos | Verificado nos casos da suíte local | [utilitarios.py](../utilitarios.py), [test_utilitarios.py](../testes/teste_utilitarios.py) | 11 testes unitários | #17 |
 | Catálogo persistente | Verificado nos cenários da suíte MySQL; revisão humana pendente | `validar_produto`, `criar_produto`, `listar_produtos`, `atualizar_produto`, `alterar_situacao_produto` em [servicos.py](../servicos.py) | cadastro, consulta, edição e desativação, filtros e reconexão aprovados em MySQL real | Alta fidelidade e baixa fidelidade / #11 |
 | Cartões e abertura de comandas | Parcial; valida operação, disponibilidade e número | `criar_cartao_comanda`, `criar_pedido`; `UNIQUE(id_cartao_aberto)` | Número, operação requerida e exclusividade sequencial verificados | #12 |
@@ -31,7 +31,8 @@ Um teste estrutural, uma simulação ou um teste do terminal JSON não comprova 
 | Disposição visual, tema e navegação | Implementado; revisão visual e de acessibilidade parcial | [modelos](../modelos/), [CSS](../estaticos/css/estilo.css), [JS](../estaticos/js/principal.js) | Modelos, recursos e 15 GETs com MySQL testados; sem navegação completa no navegador | #16 |
 | Estrutura e visões | Inicialização e consultas verificadas em MySQL real | [banco_dados/estrutura.sql](../banco_dados/estrutura.sql), nove tabelas e sete visões | MySQL 8.4.11: inicialização, restrições, FKs e sete visões aprovadas | #10, #19 |
 | Auditoria básica | Implementada; ator fixo `administrador-local` | `registrar_auditoria`, `registros_auditoria` | Reversão com falha na auditoria testado; não identifica usuário autenticado | #24 |
-| Migrações e estoque | Planejados | Nenhum executor de migrações ou saldo de estoque | Não implementados | #19, #20 |
+| Conversão da versão Flask anterior | Verificada para nove tabelas InnoDB | [migrar_banco.py](../migrar_banco.py), [compatibilidade](../compatibilidade.py) | Quatro cenários MySQL aprovados; origem preservada | #19 |
+| Evolução geral do banco e estoque | Planejados | Outras variantes antigas, versões incrementais e saldo de estoque | Não implementados | #19, #20 |
 | integração contínua | Rotina executado com sucesso | [verificar.yml](../.github/workflows/verificar.yml) | Resultado remoto registrado em [TESTES.md](TESTES.md) | #17 |
 
 ## Pendências que impedem afirmar maturidade operacional
@@ -39,6 +40,6 @@ Um teste estrutural, uma simulação ou um teste do terminal JSON não comprova 
 1. Revisar os fluxos interativos e os POSTs ainda não exercitados, além da instalação no Windows. A integração MySQL já passou na [execução 35213699602](https://github.com/gustavonm20/Sistema-de-comandas/actions/runs/35213699602).
 2. Evitar disputa entre edição de itens e fechamento, e entre abertura de comanda e encerramento da operação (#21, #14).
 3. Definir o comportamento quando o preço muda entre duas inclusões do mesmo produto: o código conserva a primeira linha e o primeiro preço (#1, #12).
-4. Criar migrações sem perda de dados (#19), autenticação e CSRF (#24).
+4. Ampliar a conversão para outras estruturas e migrações incrementais (#19), além de autenticação e CSRF (#24).
 5. Alinhar resumo por operação, períodos comparados e seleção de datas (#15).
 6. Completar as conexões de caixa e os esboços de telas correspondentes no Figma (#5–#9).

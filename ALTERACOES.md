@@ -8,6 +8,7 @@
 - Leitura dos dados JSON antigos no protótipo de terminal.
 - Testes de conversão e formulários, e rotina de verificação com os novos caminhos.
 - Histórico Git preservado; somente novos registros de alteração.
+- Verificação com MySQL real: 41 testes da aplicação, oito históricos e 142 ligações/imagens aprovados.
 
 
 Este registro descreve mudanças verificáveis, sem criar números de versão ou lançamentos retroativos. A história completa permanece nos registros de alteração e solicitações de integração.

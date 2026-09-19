@@ -2,11 +2,11 @@
 
 [README](README.md) · [Evidências](documentacao/SITUACAO.md) · [Kanban existente](https://github.com/users/gustavonm20/projects/2/views/4)
 
-Revisado em 18/09/2026. As fases organizam dependências; não são versões lançadas, percentuais ou compromissos de prazo. A consolidação foi integrada à `main` pela [solicitação de integração #25](https://github.com/gustavonm20/Sistema-de-comandas/pull/25); as lacunas abaixo continuam sendo entregas futuras. Nenhuma tarefa foi encerrada só pela publicação dos arquivos.
+Revisado em 19/09/2026. As fases organizam dependências; não são versões lançadas, percentuais ou compromissos de prazo. A consolidação foi integrada à `main` pela [solicitação de integração #25](https://github.com/gustavonm20/Sistema-de-comandas/pull/25); as lacunas abaixo continuam sendo entregas futuras. Nenhuma tarefa foi encerrada só pela publicação dos arquivos.
 
 | Fase | Base disponível | Próxima entrega verificável | Tarefas |
 | --- | --- | --- | --- |
-| Fundamentos | Python histórico, estrutura ampliada, Flask e configuração recuperados | Revisar instalação, decisões abertas e evolução do banco sem perda | [#1](https://github.com/gustavonm20/Sistema-de-comandas/issues/1), [#3](https://github.com/gustavonm20/Sistema-de-comandas/issues/3), [#10](https://github.com/gustavonm20/Sistema-de-comandas/issues/10), [#19](https://github.com/gustavonm20/Sistema-de-comandas/issues/19) |
+| Fundamentos | Python histórico, Flask e SQL traduzidos; conversão da versão anterior preservando a origem | Revisar instalação, decisões abertas e evolução do banco sem perda | [#1](https://github.com/gustavonm20/Sistema-de-comandas/issues/1), [#3](https://github.com/gustavonm20/Sistema-de-comandas/issues/3), [#10](https://github.com/gustavonm20/Sistema-de-comandas/issues/10), [#19](https://github.com/gustavonm20/Sistema-de-comandas/issues/19) |
 | Catálogo persistente | Cadastro, busca, edição e estado testados no MySQL | Revisar interface e aceitar os critérios da tarefa original | [#11](https://github.com/gustavonm20/Sistema-de-comandas/issues/11) |
 | Ciclo de comandas | Número reutilizável, itens, total e histórico de preço | Resolver cancelamento vazio, reajuste durante atendimento e corrida com fechamento | [#12](https://github.com/gustavonm20/Sistema-de-comandas/issues/12), [#21](https://github.com/gustavonm20/Sistema-de-comandas/issues/21) |
 | Pagamento e histórico | Registro local, troco, venda única e reversão testados | Validar formulários/filtros e transação com requisições simultâneas | [#13](https://github.com/gustavonm20/Sistema-de-comandas/issues/13), [#21](https://github.com/gustavonm20/Sistema-de-comandas/issues/21) |
@@ -16,7 +16,7 @@ Revisado em 18/09/2026. As fases organizam dependências; não são versões lan
 | Verificação e acesso | Testes locais, integração MySQL e integração contínua aprovados | Concorrência, migrações, revisão Windows, política de análise estática e autenticação/CSRF | [#17](https://github.com/gustavonm20/Sistema-de-comandas/issues/17), [#24](https://github.com/gustavonm20/Sistema-de-comandas/issues/24) |
 | Extensões posteriores | Estoque descrito, sem implementação | Definir unidades, momento da baixa, ajustes e estornos antes de modelar | [#20](https://github.com/gustavonm20/Sistema-de-comandas/issues/20) |
 
-A próxima sequência prática é revisar a entrega do catálogo #11 e corrigir o protocolo de concorrência da #21, coordenado com #14. Para qualquer banco com dados anteriores, a #19 é um pré-requisito. Antes de acesso externo, concluir #24. Estoque não deve impedir a aceitação do catálogo ou a consolidação básica do atendimento.
+A próxima sequência prática é revisar a entrega do catálogo #11 e corrigir o protocolo de concorrência da #21, coordenado com #14. A versão Flask anterior de nove tabelas tem conversão específica documentada; outras estruturas e migrações incrementais continuam na #19. Antes de acesso externo, concluir #24. Estoque não deve impedir a aceitação do catálogo ou a consolidação básica do atendimento.
 
 O protótipo terminal permanece como aprendizado; não recebe novas funções para substituir a web. Não há compromisso com integração bancária, emissão fiscal, múltiplas lojas ou aplicativo móvel. Tema escuro já tem código e deve ser revisado, não anunciado como algo ainda inexistente.
 

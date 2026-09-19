@@ -69,3 +69,7 @@ Aplicar quando houver ferramenta/permissão para configurações:
 - **Verificações obrigatórias:** avaliar `python-e-mysql` na proteção do ramo após revisar as permissões e o fluxo do proprietário. A rotina sozinha não bloqueia integração.
 
 A decisão de licença e um canal privado suportado para relatos de segurança também pertencem ao proprietário; esta organização não cria endereço de contato, versão suportada ou licença fictícia.
+
+## Tradução do repositório
+
+Em 19/09/2026, os caminhos e os identificadores próprios foram traduzidos, mantendo MySQL e todos os registros Git já publicados. As referências nas tarefas acompanham os novos caminhos. Essa manutenção não significa encerramento de tarefas nem alteração nativa do quadro. A tarefa #19 continua tratando a evolução geral, além da conversão específica já implementada.

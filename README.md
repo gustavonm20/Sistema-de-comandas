@@ -122,7 +122,3 @@ Leia as [regras e casos de borda](docs/BUSINESS_RULES.md). Não há implantaçã
 A prioridade é revisar e aceitar o catálogo da [issue #11](https://github.com/gustavonm20/Sistema-de-comandas/issues/11), corrigir a transação sob concorrência na #21 e preparar migrations antes de usar dados existentes. O [roadmap](ROADMAP.md) mantém as fases e dependências; a [política do Kanban](docs/KANBAN.md) distingue propostas de alterações efetivamente aplicadas ao quadro.
 
 [Como contribuir](CONTRIBUTING.md) · [Competências demonstradas](docs/SKILLS.md) · [Histórico de mudanças](CHANGELOG.md) · [Orientações para agentes](AGENTS.md)
-
-## Créditos e licença
-
-Identidade, protótipos e assets pertencem ao contexto do projeto FluxoPag. A [proveniência](docs/PROVENANCE.md) registra as fontes recuperadas e as referências de apresentação. Não foi encontrado um arquivo de licença no repositório auditado; a escolha continua com o proprietário. Nenhuma licença foi atribuída nesta organização.

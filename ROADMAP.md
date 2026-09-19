@@ -2,7 +2,7 @@
 
 [README](README.md) · [Evidências](docs/STATUS.md) · [Kanban existente](https://github.com/users/gustavonm20/projects/2/views/4)
 
-Revisado em 17/09/2026. As fases organizam dependências; não são versões lançadas, percentuais ou compromissos de prazo. A entrega consolidada está em revisão na branch `chore/consolidar-fluxopag`. Nenhuma issue foi encerrada só pela publicação dos arquivos.
+Revisado em 18/09/2026. As fases organizam dependências; não são versões lançadas, percentuais ou compromissos de prazo. A consolidação foi integrada à `main` pela [PR #25](https://github.com/gustavonm20/Sistema-de-comandas/pull/25); as lacunas abaixo continuam sendo entregas futuras. Nenhuma issue foi encerrada só pela publicação dos arquivos.
 
 | Fase | Base disponível | Próxima entrega verificável | Issues |
 | --- | --- | --- | --- |

@@ -2,7 +2,7 @@ name: Verificações
 
 on:
   push:
-    branches: [main, chore/consolidar-fluxopag]
+    branches: [main]
   pull_request:
   workflow_dispatch:
 

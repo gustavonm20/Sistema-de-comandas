@@ -715,21 +715,27 @@ def get_report(period):
 
     if period_data["period"] == "daily":
         trend_query = """
-            SELECT CONCAT(LPAD(HOUR(sold_at), 2, '0'), 'h') AS label,
-                   COUNT(*) AS sales, SUM(total_amount) AS revenue
-            FROM sales
-            WHERE sold_at >= %s AND sold_at < %s
-            GROUP BY HOUR(sold_at)
-            ORDER BY HOUR(sold_at)
+            SELECT CONCAT(LPAD(sale_hour, 2, '0'), 'h') AS label, sales, revenue
+            FROM (
+                SELECT HOUR(sold_at) AS sale_hour,
+                       COUNT(*) AS sales, SUM(total_amount) AS revenue
+                FROM sales
+                WHERE sold_at >= %s AND sold_at < %s
+                GROUP BY HOUR(sold_at)
+            ) AS hourly_sales
+            ORDER BY sale_hour
         """
     else:
         trend_query = """
-            SELECT DATE_FORMAT(DATE(sold_at), '%d/%m') AS label,
-                   COUNT(*) AS sales, SUM(total_amount) AS revenue
-            FROM sales
-            WHERE sold_at >= %s AND sold_at < %s
-            GROUP BY DATE(sold_at)
-            ORDER BY DATE(sold_at)
+            SELECT DATE_FORMAT(sale_date, '%d/%m') AS label, sales, revenue
+            FROM (
+                SELECT DATE(sold_at) AS sale_date,
+                       COUNT(*) AS sales, SUM(total_amount) AS revenue
+                FROM sales
+                WHERE sold_at >= %s AND sold_at < %s
+                GROUP BY DATE(sold_at)
+            ) AS daily_sales
+            ORDER BY sale_date
         """
 
     trend = fetch_all(trend_query, parameters)

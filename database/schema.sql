@@ -322,22 +322,19 @@ JOIN command_cards cc
 
 CREATE OR REPLACE VIEW vw_daily_summary AS
 SELECT
-    DATE(sold_at) AS summary_date,
-
-    DATE_FORMAT(
-        DATE(sold_at),
-        '%d/%m/%Y'
-    ) AS date_label,
-
-    COUNT(*) AS total_sales,
-
-    SUM(total_amount) AS total_revenue,
-
-    AVG(total_amount) AS average_ticket
-
-FROM sales
-
-GROUP BY DATE(sold_at);
+    summary_date,
+    DATE_FORMAT(summary_date, '%d/%m/%Y') AS date_label,
+    total_sales,
+    total_revenue,
+    average_ticket
+FROM (
+    SELECT DATE(sold_at) AS summary_date,
+           COUNT(*) AS total_sales,
+           SUM(total_amount) AS total_revenue,
+           AVG(total_amount) AS average_ticket
+    FROM sales
+    GROUP BY DATE(sold_at)
+) AS daily_sales;
 
 
 CREATE OR REPLACE VIEW vw_weekly_summary AS
@@ -381,5 +378,4 @@ GROUP BY
     YEAR(sold_at),
     MONTH(sold_at),
     DATE_FORMAT(sold_at, '%m/%Y');
-
 

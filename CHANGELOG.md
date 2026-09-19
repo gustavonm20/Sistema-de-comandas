@@ -1,54 +1,29 @@
-# Changelog
+# Histórico de mudanças
 
-Todas as mudanças relevantes do projeto serão registradas neste arquivo.
+Este registro descreve mudanças verificáveis, sem criar números de versão ou lançamentos retroativos. A história completa permanece nos commits e pull requests.
 
-O formato é inspirado em *Keep a Changelog* e o projeto pretende adotar versionamento semântico quando a aplicação possuir releases.
+## Não lançado — 17/09/2026
 
-## [Unreleased]
+Entrega proposta na branch `chore/consolidar-fluxopag`, ainda sujeita a revisão:
 
-### Adicionado
+- Fontes de `FluxoPag-Flask-MySQL.zip` extraídos e consolidados: backend Flask, templates, CSS, JavaScript, assets, schema e dependências.
+- Evolução do terminal JSON recuperada em `legacy/terminal-json/`; protótipo inicial e schema anterior preservados.
+- Configuração `.env` funcional, inicialização protegida de banco vazio, dados fictícios opcionais e tratamento de indisponibilidade do banco.
+- Compatibilidade de `order_item_id`, índices, snapshots, limites de validação e cálculos de calendário revisados.
+- Agregações dos resumos corrigidas para MySQL com `ONLY_FULL_GROUP_BY`.
+- CI com MySQL real: 36 testes da aplicação e seis históricos aprovados no [commit 2adc690](https://github.com/gustavonm20/Sistema-de-comandas/commit/2adc6900b09f988ef975e285207b57dcab842e10).
+- README, guias técnicos, ERD, evidências, origem dos arquivos, design, roadmap e orientações de contribuição reconciliados.
+- Logo original e prévia autêntica do Figma; link do protótipo separado do arquivo de design.
+- Issues existentes revisadas e #24 criada para acesso/autenticação/CSRF. Nenhuma issue de implementação encerrada por causa desta documentação.
 
-- protótipo didático em Python executado no terminal;
-- menu de produtos com cadastro, listagem, pesquisa, edição e desativação;
-- planejamento do fluxo de comandas, histórico e resumos;
-- protótipo hi-fi do FluxoPag no Figma;
-- telas de Dashboard, Produtos, Comandas, Nova comanda, Detalhes, Pagamento e Histórico;
-- conta autenticada representando o estabelecimento;
-- estados de dia não iniciado e dia em andamento;
-- resumos diário, semanal e mensal;
-- parte dos wireframes low-fi;
-- documentação de regras de negócio;
-- roadmap com issues de design, backend, frontend, MVP e qualidade;
-- templates de issue e pull request;
-- schema inicial do MySQL em `database/schema.sql`;
-- tabelas `categories`, `products`, `command_cards`, `orders`, `order_items` e `sales`;
-- constraints de integridade para preços, quantidades, estados e números de comandas;
-- proteção para impedir dois atendimentos abertos na mesma comanda física;
-- índices iniciais para consultas de produtos, pedidos e vendas;
-- views para catálogo, comandas abertas, detalhes da comanda e histórico de vendas;
-- views para resumos diário, semanal e mensal;
-- documentação específica da modelagem em `docs/DATABASE.md`.
+Login, proteção CSRF, migrations, estoque e garantias completas sob concorrência **não** fazem parte das funcionalidades concluídas nesta entrega. A configuração nativa pendente do Projects e metadados está registrada em [KANBAN.md](docs/KANBAN.md).
 
-### Alterado
+## Histórico confirmado
 
-- banco planejado alterado de SQLite para MySQL 8;
-- documentação deixou de fixar Flask + SQLite como arquitetura definitiva;
-- roadmap atualizado para refletir o início da fundação técnica;
-- Kanban documentado com a issue #10 em andamento;
-- cadastro de produtos de exemplo passou a localizar categorias pelo nome em vez de depender de IDs fixos;
-- datas permanecem armazenadas como `DATETIME` e são formatadas nas views para `HH:MM  DD/MM/AAAA`.
+| Data de integração | Mudança verificável |
+| --- | --- |
+| 24/08/2026 | [PR #22](https://github.com/gustavonm20/Sistema-de-comandas/pull/22): fundação MySQL. |
+| 24/08/2026 | [PR #23](https://github.com/gustavonm20/Sistema-de-comandas/pull/23): tradução SQL para português naquele momento. O schema da base auditada posterior voltou a nomes ingleses; esta consolidação segue o arquivo encontrado. |
+| 04/08/2026 | [PR #18](https://github.com/gustavonm20/Sistema-de-comandas/pull/18): organização de documentação e roadmap. |
 
-### Planejado
-
-- integração Python ↔ MySQL;
-- migrations versionadas;
-- transação atômica para fechamento de comanda e registro da venda;
-- abertura de caixa com valor inicial;
-- bloqueio do fechamento com comandas abertas;
-- confirmação de encerramento;
-- conferência e fechamento de caixa;
-- comparação entre períodos;
-- controle de estoque e movimentações;
-- conclusão e organização do low-fi e hi-fi;
-- testes automatizados e GitHub Actions;
-- backup e restauração.
+A evolução terminal → Figma → modelagem → web é descrita na [visão do produto](docs/PRODUCT.md), sem atribuir datas não comprovadas às fases de criação.

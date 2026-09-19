@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block titulo %}Pagamento da comanda #{{ pedido.numero_cartao }} — FluxoPag{% endblock %}
+
+{% block conteudo %}
+<div class="cabecalho-pagina">
+    <div>
+        <a class="ligacao-voltar" href="{{ url_for('detalhes_pedido', id_pedido=pedido.id_pedido) }}">← Voltar para a comanda</a>
+        <h1>Finalizar pagamento</h1>
+        <p>Comanda #{{ pedido.numero_cartao }} • {{ pedido.identificacao_atendimento }}</p>
+    </div>
+</div>
+
+{% if pedido.situacao != 'aberto' %}
+    <section class="painel estado-vazio">
+        <h3>Essa comanda já foi fechada</h3>
+        <p>Consulte a venda no histórico.</p>
+        <a class="botao secundario" href="{{ url_for('historico') }}">Abrir histórico</a>
+    </section>
+{% elif not pedido['itens'] %}
+    <section class="painel estado-vazio">
+        <h3>A comanda está vazia</h3>
+        <p>Adicione pelo menos um produto antes de receber o pagamento.</p>
+        <a class="botao primario" href="{{ url_for('detalhes_pedido', id_pedido=pedido.id_pedido) }}">Adicionar produtos</a>
+    </section>
+{% else %}
+    <form method="post" class="grade-conteudo grade-pagamento" id="formulario-pagamento" data-total="{{ pedido.total }}">
+        <section class="painel">
+            <div class="cabecalho-painel"><h2>Forma de pagamento</h2></div>
+            <div class="opcoes-pagamento">
+                <label class="opcao-pagamento">
+                    <input type="radio" name="forma_pagamento" value="dinheiro" required>
+                    <span class="simbolo-pagamento">R$</span>
+                    <span><strong>Dinheiro</strong><small>Calcular troco</small></span>
+                </label>
+                <label class="opcao-pagamento">
+                    <input type="radio" name="forma_pagamento" value="pix" required>
+                    <span class="simbolo-pagamento">◆</span>
+                    <span><strong>Pix</strong><small>Pagamento instantâneo</small></span>
+                </label>
+                <label class="opcao-pagamento">
+                    <input type="radio" name="forma_pagamento" value="debito" required>
+                    <span class="simbolo-pagamento">▣</span>
+                    <span><strong>Débito</strong><small>Cartão de débito</small></span>
+                </label>
+                <label class="opcao-pagamento">
+                    <input type="radio" name="forma_pagamento" value="credito" required>
+                    <span class="simbolo-pagamento">▰</span>
+                    <span><strong>Crédito</strong><small>Cartão de crédito</small></span>
+                </label>
+            </div>
+
+            <div class="campos-dinheiro" id="campos-dinheiro" hidden>
+                <label>
+                    <span>Valor recebido</span>
+                    <input id="valor-recebido" type="text" name="valor_recebido"
+                           inputmode="decimal" placeholder="R$ 0,00">
+                </label>
+                <div class="previa-troco">
+                    <span>Troco</span>
+                    <strong id="valor-troco">R$ 0,00</strong>
+                </div>
+            </div>
+        </section>
+
+        <aside class="painel resumo-pagamento">
+            <div class="cabecalho-painel"><h2>Resumo</h2></div>
+            <dl>
+                <div><dt>Comanda</dt><dd>#{{ pedido.numero_cartao }}</dd></div>
+                <div><dt>Atendimento</dt><dd>{{ pedido.identificacao_atendimento }}</dd></div>
+                <div><dt>Quantidade de itens</dt><dd>{{ pedido.quantidade_itens }}</dd></div>
+            </dl>
+            <div class="total-pagamento">
+                <span>Total a receber</span>
+                <strong>{{ formatar_valor(pedido.total) }}</strong>
+            </div>
+            <button class="botao primario botao-inteiro" type="submit">Confirmar pagamento</button>
+            <p class="texto-ajuda">Ao confirmar, a comanda será fechada e o cartão poderá ser utilizado novamente.</p>
+        </aside>
+    </form>
+{% endif %}
+{% endblock %}

@@ -1,6 +1,6 @@
 .env
 .env.*
-!.env.example
+!.env.exemplo
 .venv/
 venv/
 __pycache__/
@@ -11,6 +11,9 @@ htmlcov/
 *.log
 *.sql.bak
 *.dump
-legacy/terminal-json/data/
+legado/terminal-json/dados/
 .DS_Store
 Thumbs.db
+# Caminhos antigos mantidos somente como proteção de compatibilidade.
+legacy/terminal-json/data/
+legado/terminal-json/data/

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block titulo %}Venda #{{ venda.id_venda }} — FluxoPag{% endblock %}
+
+{% block conteudo %}
+<div class="cabecalho-pagina">
+    <div>
+        <a class="ligacao-voltar" href="{{ url_for('historico') }}">← Voltar para o histórico</a>
+        <h1>Venda #{{ venda.id_venda }}</h1>
+        <p>Registrada em {{ formatar_data_hora(venda.vendido_em) }}</p>
+    </div>
+    <span class="etiqueta-situacao sucesso">Pagamento registrado</span>
+</div>
+
+<div class="grade-conteudo grade-detalhes-venda">
+    <section class="painel">
+        <div class="cabecalho-painel"><h2>Itens vendidos</h2></div>
+        <div class="envoltorio-tabela">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Categoria</th>
+                        <th>Quantidade</th>
+                        <th>Preço unitário</th>
+                        <th class="alinhar-direita">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in venda['itens'] %}
+                        <tr>
+                            <td><strong>{{ item.nome_produto_historico }}</strong></td>
+                            <td>{{ item.nome_categoria_historico }}</td>
+                            <td>{{ item.quantidade }}</td>
+                            <td>{{ formatar_valor(item.preco_unitario) }}</td>
+                            <td class="alinhar-direita">{{ formatar_valor(item.total_item) }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <aside class="painel cartao-recibo">
+        <div class="cabecalho-painel"><h2>Resumo da venda</h2></div>
+        <dl>
+            <div><dt>Comanda</dt><dd>#{{ venda.numero_cartao_historico }}</dd></div>
+            <div><dt>Atendimento</dt><dd>{{ venda.identificacao_atendimento }}</dd></div>
+            <div><dt>Aberta em</dt><dd>{{ formatar_data_hora(venda.aberto_em) }}</dd></div>
+            <div><dt>Pagamento</dt><dd>{{ nome_pagamento(venda.forma_pagamento) }}</dd></div>
+            {% if venda.forma_pagamento == 'dinheiro' %}
+                <div><dt>Valor recebido</dt><dd>{{ formatar_valor(venda.valor_recebido) }}</dd></div>
+                <div><dt>Troco</dt><dd>{{ formatar_valor(venda.troco) }}</dd></div>
+            {% endif %}
+        </dl>
+        <div class="total-pagamento">
+            <span>Total pago</span>
+            <strong>{{ formatar_valor(venda.valor_total) }}</strong>
+        </div>
+    </aside>
+</div>
+{% endblock %}

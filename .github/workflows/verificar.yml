@@ -1,0 +1,58 @@
+name: Verificações
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  python-e-mysql:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: senha-apenas-de-teste
+          TZ: America/Sao_Paulo
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -psenha-apenas-de-teste"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+    env:
+      MYSQL_SERVIDOR: 127.0.0.1
+      MYSQL_PORTA: 3306
+      MYSQL_USUARIO: root
+      MYSQL_SENHA: senha-apenas-de-teste
+      MYSQL_BANCO: fluxopag_teste_integracao
+      EXECUTAR_TESTES_MYSQL: '1'
+      TZ: America/Sao_Paulo
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: dependencias.txt
+      - name: Instalar dependências
+        run: python -m pip install -r dependencias.txt
+      - name: Inicializar MySQL isolado
+        run: python inicializar_banco.py
+      - name: Verificar aplicação, formulários e migração com banco real
+        run: python -m unittest discover -s testes -p 'teste_*.py' -v
+      - name: Verificar protótipo histórico
+        working-directory: legado/terminal-json
+        run: python -m unittest discover -p 'teste_*.py' -v
+      - name: Verificar sintaxe JavaScript
+        run: node --check estaticos/js/principal.js
+      - name: Verificar documentação
+        run: python ferramentas/verificar_documentacao.py

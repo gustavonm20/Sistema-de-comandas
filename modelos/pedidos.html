@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block titulo %}Comandas — FluxoPag{% endblock %}
+
+{% block conteudo %}
+<div class="cabecalho-pagina">
+    <div>
+        <h1>Comandas</h1>
+        <p>Acompanhe todos os atendimentos que estão em andamento.</p>
+    </div>
+    <div class="acoes-cabecalho">
+        <a class="botao secundario" href="{{ url_for('cartoes') }}">Gerenciar cartões</a>
+        <a class="botao primario" href="{{ url_for('criar_pedido_rota') }}">＋ Nova comanda</a>
+    </div>
+</div>
+
+<nav class="abas-arredondadas" aria-label="Filtrar comandas">
+    <a class="{{ 'ativo' if atendimento_selecionado == 'todos' else '' }}" href="{{ url_for('pedidos') }}">Todas</a>
+    <a class="{{ 'ativo' if atendimento_selecionado == 'mesa' else '' }}" href="{{ url_for('pedidos', tipo_atendimento='mesa') }}">Mesas</a>
+    <a class="{{ 'ativo' if atendimento_selecionado == 'balcao' else '' }}" href="{{ url_for('pedidos', tipo_atendimento='balcao') }}">Balcão</a>
+    <a class="{{ 'ativo' if atendimento_selecionado == 'retirada' else '' }}" href="{{ url_for('pedidos', tipo_atendimento='retirada') }}">Retirada</a>
+</nav>
+
+{% if pedidos %}
+    <section class="grade-pedidos">
+        {% for pedido in pedidos %}
+            <article class="cartao-pedido">
+                <div class="cabecalho-cartao-pedido">
+                    <div>
+                        <span>Comanda</span>
+                        <strong>#{{ pedido.numero_cartao }}</strong>
+                    </div>
+                    <span class="etiqueta-situacao sucesso">Aberta</span>
+                </div>
+                <dl>
+                    <div><dt>Atendimento</dt><dd>{{ pedido.identificacao_atendimento }}</dd></div>
+                    <div><dt>Itens</dt><dd>{{ pedido.quantidade_itens }}</dd></div>
+                    <div><dt>Abertura</dt><dd>{{ formatar_data_hora(pedido.aberto_em) }}</dd></div>
+                </dl>
+                <div class="total-pedido">
+                    <span>Total</span>
+                    <strong>{{ formatar_valor(pedido.total) }}</strong>
+                </div>
+                <div class="acoes-pedido">
+                    <a class="botao secundario" href="{{ url_for('detalhes_pedido', id_pedido=pedido.id_pedido) }}">Detalhes</a>
+                    <a class="botao primario" href="{{ url_for('pagamento', id_pedido=pedido.id_pedido) }}">Finalizar</a>
+                </div>
+            </article>
+        {% endfor %}
+    </section>
+{% else %}
+    <section class="painel estado-vazio">
+        <h3>Nenhuma comanda aberta</h3>
+        <p>As comandas em atendimento aparecerão aqui.</p>
+        <a class="botao primario" href="{{ url_for('criar_pedido_rota') }}">Abrir nova comanda</a>
+    </section>
+{% endif %}
+{% endblock %}

@@ -2,27 +2,27 @@
 # CLASSES
 # =========================
 
-class Product:
-    def __init__(self, product_id, name, price, category):
-        self.product_id = product_id
-        self.name = name
-        self.price = price
-        self.category = category
-        self.active = True
+class Produto:
+    def __init__(instancia, id_produto, nome, preco, categoria):
+        instancia.id_produto = id_produto
+        instancia.nome = nome
+        instancia.preco = preco
+        instancia.categoria = categoria
+        instancia.ativo = True
 
 
 # =========================
 # LISTAS DO SISTEMA
 # =========================
 
-products = []
+produtos = []
 
 
 # =========================
 # MENUS
 # =========================
 
-def show_menu():
+def exibir_menu():
     print("\n=====================")
     print("Sistema de comandas")
     print("1 - Produtos")
@@ -33,7 +33,7 @@ def show_menu():
     print("=====================")
 
 
-def show_product_menu():
+def exibir_menu_produtos():
     print("\n=====================")
     print("Área de produtos")
     print("1 - Cadastrar produto")
@@ -45,7 +45,7 @@ def show_product_menu():
     print("=====================")
 
 
-def show_order_menu():
+def exibir_menu_comandas():
     print("\n=====================")
     print("Área de comandas")
     print("1 - Abrir comanda")
@@ -58,7 +58,7 @@ def show_order_menu():
     print("=====================")
 
 
-def show_history_menu():
+def exibir_menu_historico():
     print("\n=====================")
     print("Histórico de vendas")
     print("1 - Listar todas as vendas")
@@ -67,7 +67,7 @@ def show_history_menu():
     print("=====================")
 
 
-def show_summary_menu():
+def exibir_menu_resumos():
     print("\n=====================")
     print("Resumo de vendas")
     print("1 - Resumo diário")
@@ -81,49 +81,49 @@ def show_summary_menu():
 # FUNÇÕES AUXILIARES
 # =========================
 
-def read_option():
+def ler_opcao():
     while True:
         try:
-            option = int(input("Escolha uma opção: "))
-            return option
+            opcao = int(input("Escolha uma opção: "))
+            return opcao
 
         except ValueError:
             print("Entrada inválida, digite apenas números.")
 
 
-def read_price():
+def ler_preco():
     while True:
         try:
-            price = input("Digite o preço do produto: R$ ")
+            preco = input("Digite o preço do produto: R$ ")
 
             # Troca a vírgula por ponto para o Python reconhecer o decimal
-            price = price.replace(",", ".")
+            preco = preco.replace(",", ".")
 
-            price = float(price)
+            preco = float(preco)
 
-            if price <= 0:
+            if preco <= 0:
                 print("O preço deve ser maior que zero.")
                 continue
 
-            return price
+            return preco
 
         except ValueError:
             print("Preço inválido. Digite apenas números.")
 
 
-def format_currency(value):
-    formatted_value = f"R$ {value:.2f}"
-    return formatted_value.replace(".", ",")
+def formatar_moeda(valor):
+    valor_formatado = f"R$ {valor:.2f}"
+    return valor_formatado.replace(".", ",")
 
 
-def pause():
+def pausar():
     input("\nPressione ENTER para continuar...")
 
 
-def find_product_by_id(product_id):
-    for product in products:
-        if product.product_id == product_id:
-            return product
+def encontrar_produto_por_id(id_produto):
+    for produto in produtos:
+        if produto.id_produto == id_produto:
+            return produto
 
     return None
 
@@ -132,157 +132,157 @@ def find_product_by_id(product_id):
 # FUNÇÕES DE PRODUTOS
 # =========================
 
-def register_product():
+def cadastrar_produto():
     print("\n=====================")
     print("Cadastro de produto")
     print("=====================")
 
-    name = input("Digite o nome do produto: ").strip()
-    category = input("Digite a categoria do produto: ").strip()
-    price = read_price()
+    nome = input("Digite o nome do produto: ").strip()
+    categoria = input("Digite a categoria do produto: ").strip()
+    preco = ler_preco()
 
-    product_id = len(products) + 1
+    id_produto = len(produtos) + 1
 
-    product = Product(
-        product_id,
-        name,
-        price,
-        category
+    produto = Produto(
+        id_produto,
+        nome,
+        preco,
+        categoria
     )
 
-    products.append(product)
+    produtos.append(produto)
 
     print("\nProduto cadastrado com sucesso!")
-    print(f"Código: {product.product_id}")
-    print(f"Nome: {product.name}")
-    print(f"Preço: {format_currency(product.price)}")
-    print(f"Categoria: {product.category}")
+    print(f"Código: {produto.id_produto}")
+    print(f"Nome: {produto.nome}")
+    print(f"Preço: {formatar_moeda(produto.preco)}")
+    print(f"Categoria: {produto.categoria}")
 
 
-def list_products():
+def listar_produtos():
     print("\nLista de produtos")
     print("=====================")
 
-    if not products:
+    if not produtos:
         print("Nenhum produto cadastrado.")
         return
 
-    for product in products:
-        status = "Ativo" if product.active else "Desativado"
+    for produto in produtos:
+        situacao = "Ativo" if produto.ativo else "Desativado"
 
         print(
-            f"\nCódigo: {product.product_id} | "
-            f"Nome: {product.name} | "
-            f"Preço: {format_currency(product.price)} | "
-            f"Categoria: {product.category} | "
-            f"Status: {status}"
+            f"\nCódigo: {produto.id_produto} | "
+            f"Nome: {produto.nome} | "
+            f"Preço: {formatar_moeda(produto.preco)} | "
+            f"Categoria: {produto.categoria} | "
+            f"Status: {situacao}"
         )
 
 
-def search_product():
+def pesquisar_produto():
     print("\nPesquisa de produto")
     print("=====================")
 
-    if not products:
+    if not produtos:
         print("Nenhum produto cadastrado.")
         return
 
-    searched_name = input("Digite o nome do produto: ").strip().lower()
+    nome_pesquisado = input("Digite o nome do produto: ").strip().lower()
 
-    found_products = []
+    produtos_encontrados = []
 
-    for product in products:
-        if searched_name in product.name.lower():
-            found_products.append(product)
+    for produto in produtos:
+        if nome_pesquisado in produto.nome.lower():
+            produtos_encontrados.append(produto)
 
-    if not found_products:
+    if not produtos_encontrados:
         print("Nenhum produto encontrado.")
         return
 
     print("\nProdutos encontrados:")
 
-    for product in found_products:
-        status = "Ativo" if product.active else "Desativado"
+    for produto in produtos_encontrados:
+        situacao = "Ativo" if produto.ativo else "Desativado"
 
         print(
-            f"\nCódigo: {product.product_id} | "
-            f"Nome: {product.name} | "
-            f"Preço: {format_currency(product.price)} | "
-            f"Categoria: {product.category} | "
-            f"Status: {status}"
+            f"\nCódigo: {produto.id_produto} | "
+            f"Nome: {produto.nome} | "
+            f"Preço: {formatar_moeda(produto.preco)} | "
+            f"Categoria: {produto.categoria} | "
+            f"Status: {situacao}"
         )
 
 
-def edit_product():
+def editar_produto():
     print("\nEdição de produto")
     print("=====================")
 
-    if not products:
+    if not produtos:
         print("Nenhum produto cadastrado.")
         return
 
     try:
-        product_id = int(input("Digite o código do produto: "))
+        id_produto = int(input("Digite o código do produto: "))
 
     except ValueError:
         print("Código inválido. Digite apenas números.")
         return
 
-    product = find_product_by_id(product_id)
+    produto = encontrar_produto_por_id(id_produto)
 
-    if product is None:
+    if produto is None:
         print("Produto não encontrado.")
         return
 
     print("\nProduto encontrado:")
-    print(f"Nome atual: {product.name}")
-    print(f"Preço atual: {format_currency(product.price)}")
-    print(f"Categoria atual: {product.category}")
+    print(f"Nome atual: {produto.nome}")
+    print(f"Preço atual: {formatar_moeda(produto.preco)}")
+    print(f"Categoria atual: {produto.categoria}")
 
-    new_name = input("\nDigite o novo nome: ").strip()
-    new_category = input("Digite a nova categoria: ").strip()
-    new_price = read_price()
+    novo_nome = input("\nDigite o novo nome: ").strip()
+    nova_categoria = input("Digite a nova categoria: ").strip()
+    novo_preco = ler_preco()
 
-    product.name = new_name
-    product.category = new_category
-    product.price = new_price
+    produto.nome = novo_nome
+    produto.categoria = nova_categoria
+    produto.preco = novo_preco
 
     print("\nProduto editado com sucesso!")
 
 
-def deactivate_product():
+def desativar_produto():
     print("\nDesativação de produto")
     print("=====================")
 
-    if not products:
+    if not produtos:
         print("Nenhum produto cadastrado.")
         return
 
     try:
-        product_id = int(input("Digite o código do produto: "))
+        id_produto = int(input("Digite o código do produto: "))
 
     except ValueError:
         print("Código inválido. Digite apenas números.")
         return
 
-    product = find_product_by_id(product_id)
+    produto = encontrar_produto_por_id(id_produto)
 
-    if product is None:
+    if produto is None:
         print("Produto não encontrado.")
         return
 
-    if not product.active:
+    if not produto.ativo:
         print("Esse produto já está desativado.")
         return
 
-    print(f"\nProduto: {product.name}")
+    print(f"\nProduto: {produto.nome}")
 
-    confirmation = input(
+    confirmacao = input(
         "Deseja realmente desativar este produto? (S/N): "
     ).strip().lower()
 
-    if confirmation == "s":
-        product.active = False
+    if confirmacao == "s":
+        produto.ativo = False
         print("Produto desativado com sucesso.")
 
     else:
@@ -293,26 +293,26 @@ def deactivate_product():
 # ÁREA DE PRODUTOS
 # =========================
 
-def product_view():
+def tela_produtos():
     while True:
-        show_product_menu()
-        option = read_option()
+        exibir_menu_produtos()
+        opcao = ler_opcao()
 
-        match option:
+        match opcao:
             case 1:
-                register_product()
+                cadastrar_produto()
 
             case 2:
-                list_products()
+                listar_produtos()
 
             case 3:
-                search_product()
+                pesquisar_produto()
 
             case 4:
-                edit_product()
+                editar_produto()
 
             case 5:
-                deactivate_product()
+                desativar_produto()
 
             case 0:
                 print("\nVoltando ao menu principal...")
@@ -321,18 +321,18 @@ def product_view():
             case _:
                 print("\nOpção inválida, tente novamente.")
 
-        pause()
+        pausar()
 
 # =========================
 # ÁREA DE COMANDAS
 # =========================
 
-def order_view():
+def tela_comandas():
     while True:
-        show_order_menu()
-        option = read_option()
+        exibir_menu_comandas()
+        opcao = ler_opcao()
 
-        match option:
+        match opcao:
             case 1:
                 print("\nAbertura de comanda selecionada.")
 
@@ -358,19 +358,19 @@ def order_view():
             case _:
                 print("\nOpção inválida, tente novamente.")
 
-        pause()
+        pausar()
 
 
 # =========================
 # ÁREA DE HISTÓRICO
 # =========================
 
-def historic_view():
+def tela_historico():
     while True:
-        show_history_menu()
-        option = read_option()
+        exibir_menu_historico()
+        opcao = ler_opcao()
 
-        match option:
+        match opcao:
             case 1:
                 print("\nLista de vendas selecionada.")
 
@@ -384,19 +384,19 @@ def historic_view():
             case _:
                 print("\nOpção inválida, tente novamente.")
 
-        pause()
+        pausar()
 
 
 # =========================
 # ÁREA DE RESUMOS
 # =========================
 
-def summary_view():
+def tela_resumos():
     while True:
-        show_summary_menu()
-        option = read_option()
+        exibir_menu_resumos()
+        opcao = ler_opcao()
 
-        match option:
+        match opcao:
             case 1:
                 print("\nResumo diário selecionado.")
 
@@ -413,30 +413,30 @@ def summary_view():
             case _:
                 print("\nOpção inválida, tente novamente.")
 
-        pause()
+        pausar()
 
 
 # =========================
 # PROGRAMA PRINCIPAL
 # =========================
 
-def start_system():
+def iniciar_sistema():
     while True:
-        show_menu()
-        option = read_option()
+        exibir_menu()
+        opcao = ler_opcao()
 
-        match option:
+        match opcao:
             case 1:
-                product_view()
+                tela_produtos()
 
             case 2:
-                order_view()
+                tela_comandas()
 
             case 3:
-                historic_view()
+                tela_historico()
 
             case 4:
-                summary_view()
+                tela_resumos()
 
             case 0:
                 print("\nEncerrando sistema...")
@@ -444,9 +444,9 @@ def start_system():
 
             case _:
                 print("\nOpção inválida, tente novamente.")
-                pause()
+                pausar()
 
 
 # Verifica se este é o arquivo principal antes de iniciar o sistema
 if __name__ == "__main__":
-    start_system()
+    iniciar_sistema()

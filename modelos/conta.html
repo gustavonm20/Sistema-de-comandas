@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block titulo %}Conta e operação — FluxoPag{% endblock %}
+
+{% block conteudo %}
+<div class="cabecalho-pagina">
+    <div>
+        <h1>Conta e operação</h1>
+        <p>Atualize o estabelecimento e controle a abertura diária do caixa.</p>
+    </div>
+</div>
+
+<div class="grade-conteudo grade-conta">
+    <section class="painel">
+        <div class="cabecalho-painel">
+            <div>
+                <h2>Estabelecimento</h2>
+                <span>Informações exibidas no sistema</span>
+            </div>
+        </div>
+        <form method="post" class="pilha-formulario">
+            <label>
+                <span>Nome do estabelecimento</span>
+                <input type="text" name="nome" required minlength="2" maxlength="120"
+                       value="{{ request.form.get('nome', estabelecimento.nome if estabelecimento else '') }}">
+            </label>
+            <label>
+                <span>E-mail</span>
+                <input type="email" name="correio" required maxlength="150"
+                       value="{{ request.form.get('correio', estabelecimento.correio if estabelecimento else '') }}">
+            </label>
+            <label>
+                <span>Tipo de negócio</span>
+                <input type="text" name="tipo_estabelecimento" required minlength="2" maxlength="100"
+                       value="{{ request.form.get('tipo_estabelecimento', estabelecimento.tipo_estabelecimento if estabelecimento else '') }}">
+            </label>
+            <div class="acoes-formulario">
+                <button class="botao primario" type="submit">Salvar informações</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="painel operation-panel">
+        <div class="cabecalho-painel">
+            <div>
+                <h2>Operação diária</h2>
+                <span>Controle do caixa</span>
+            </div>
+            <span class="etiqueta-situacao {{ 'sucesso' if operacao else 'neutro' }}">
+                {{ 'Dia em andamento' if operacao else 'Dia encerrado' }}
+            </span>
+        </div>
+
+        {% if operacao %}
+            <dl class="resumo-operacao">
+                <div><dt>Início</dt><dd>{{ formatar_data_hora(operacao.aberto_em) }}</dd></div>
+                <div><dt>Valor inicial</dt><dd>{{ formatar_valor(operacao.caixa_inicial) }}</dd></div>
+                <div><dt>Dinheiro esperado agora</dt><dd>{{ formatar_valor(operacao.caixa_esperado_atual) }}</dd></div>
+            </dl>
+            <div class="divisor"></div>
+            <form method="post" action="{{ url_for('fechar_operacao_rota') }}" class="pilha-formulario"
+                  data-confirmacao="Finalizar o dia? Todas as comandas precisam estar fechadas.">
+                <label>
+                    <span>Valor contado no caixa</span>
+                    <input type="text" name="caixa_contado" inputmode="decimal" required placeholder="R$ 0,00">
+                </label>
+                <label>
+                    <span>Observação sobre diferença</span>
+                    <textarea name="justificativa_diferenca" maxlength="255" rows="3"
+                              placeholder="Preencha se o valor contado for diferente do esperado"></textarea>
+                </label>
+                <button class="botao perigo-solido" type="submit">Conferir e finalizar dia</button>
+            </form>
+        {% else %}
+            <div class="texto-operacao-fechada">
+                <strong>Pronto para iniciar</strong>
+                <p>Informe o dinheiro disponível no caixa antes do primeiro atendimento.</p>
+            </div>
+            <form method="post" action="{{ url_for('abrir_operacao_rota') }}" class="pilha-formulario">
+                <label>
+                    <span>Valor inicial do caixa</span>
+                    <input type="text" name="caixa_inicial" inputmode="decimal" required
+                           value="0,00" placeholder="R$ 0,00">
+                </label>
+                <button class="botao primario" type="submit">Iniciar dia</button>
+            </form>
+        {% endif %}
+    </section>
+</div>
+
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block titulo %}Produtos — FluxoPag{% endblock %}
+
+{% block conteudo %}
+<div class="cabecalho-pagina">
+    <div>
+        <h1>Produtos</h1>
+        <p>Cadastre, encontre e atualize os itens vendidos.</p>
+    </div>
+    <a class="botao primario" href="{{ url_for('criar_produto_rota') }}">＋ Novo produto</a>
+</div>
+
+<form class="filtros painel painel-compacto" method="get">
+    <label>
+        <span>Pesquisar</span>
+        <input type="search" name="busca" value="{{ busca }}" placeholder="Nome do produto">
+    </label>
+    <label>
+        <span>Categoria</span>
+        <select name="id_categoria">
+            <option value="">Todas</option>
+            {% for categoria in categorias %}
+                <option value="{{ categoria.id_categoria }}" {{ 'selected' if categoria_selecionada == categoria.id_categoria else '' }}>
+                    {{ categoria.nome }}
+                </option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>
+        <span>Situação</span>
+        <select name="situacao">
+            <option value="todos" {{ 'selected' if situacao_selecionada == 'todos' else '' }}>Todos</option>
+            <option value="ativo" {{ 'selected' if situacao_selecionada == 'ativo' else '' }}>Ativos</option>
+            <option value="inativo" {{ 'selected' if situacao_selecionada == 'inativo' else '' }}>Desativados</option>
+        </select>
+    </label>
+    <button class="botao secundario" type="submit">Aplicar filtros</button>
+</form>
+
+<section class="painel">
+    {% if produtos %}
+        <div class="envoltorio-tabela">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Produto</th>
+                        <th>Categoria</th>
+                        <th>Preço</th>
+                        <th>Situação</th>
+                        <th class="alinhar-direita">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for produto in produtos %}
+                        <tr>
+                            <td>{{ "%02d"|format(produto.id_produto) }}</td>
+                            <td><strong>{{ produto.nome }}</strong></td>
+                            <td>{{ produto.nome_categoria }}</td>
+                            <td>{{ formatar_valor(produto.preco) }}</td>
+                            <td>
+                                <span class="etiqueta-situacao {{ 'sucesso' if produto.ativo else 'neutro' }}">
+                                    {{ 'Ativo' if produto.ativo else 'Desativado' }}
+                                </span>
+                            </td>
+                            <td class="alinhar-direita acoes">
+                                <a class="botao-texto" href="{{ url_for('editar_produto_rota', id_produto=produto.id_produto) }}">Editar</a>
+                                <form method="post" action="{{ url_for('situacao_produto', id_produto=produto.id_produto) }}">
+                                    <input type="hidden" name="ativo" value="{{ 'false' if produto.ativo else 'true' }}">
+                                    <button class="botao-texto {{ 'perigo' if produto.ativo else '' }}" type="submit">
+                                        {{ 'Desativar' if produto.ativo else 'Ativar' }}
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="estado-vazio">
+            <h3>Nenhum produto encontrado</h3>
+            <p>Altere os filtros ou cadastre um novo produto.</p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

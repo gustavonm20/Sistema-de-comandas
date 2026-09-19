@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-tema="claro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="FluxoPag — sistema de comandas para padarias, cafeterias e restaurantes.">
+    <title>{% block titulo %}FluxoPag{% endblock %}</title>
+    <link rel="icon" href="{{ url_for('static', filename='imagens/fluxopag-logotipo.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <script>
+        document.documentElement.dataset.tema =
+            localStorage.getItem("fluxopag-tema") ||
+            (matchMedia("(prefers-color-scheme: dark)").matches ? "escuro" : "claro");
+    </script>
+</head>
+<body>
+    <header class="barra-superior">
+        <button class="botao-icone botao-menu" id="botao-menu" type="button" aria-label="Abrir menu">☰</button>
+
+        <a class="marca" href="{{ url_for('painel') }}" aria-label="FluxoPag — Sistema Ágil de Comandas">
+            <img src="{{ url_for('static', filename='imagens/fluxopag-marca-original.png') }}" alt="FluxoPag — Sistema Ágil de Comandas">
+        </a>
+
+        <div class="acoes-barra-superior">
+            <a class="botao primario botao-nova-comanda" href="{{ url_for('criar_pedido_rota') }}">
+                <span aria-hidden="true">＋</span>
+                <span class="rotulo-botao">Nova comanda</span>
+            </a>
+            <button class="botao-icone botao-tema" id="botao-tema" type="button" aria-label="Alternar tema">
+                <span class="icone-lua" aria-hidden="true">☾</span>
+                <span class="icone-sol" aria-hidden="true">☀</span>
+            </button>
+            <a class="botao-perfil" href="{{ url_for('conta') }}" title="Conta do estabelecimento">AD</a>
+        </div>
+    </header>
+
+    <div class="sobreposicao-barra-lateral" id="sobreposicao-barra-lateral"></div>
+    <aside class="barra-lateral" id="barra-lateral">
+        <nav class="navegacao-barra-lateral" aria-label="Navegação principal">
+            <a class="item-navegacao {{ 'ativo' if pagina_ativa == 'painel' else '' }}" href="{{ url_for('painel') }}">
+                <img src="{{ url_for('static', filename='imagens/icones-menu/painel-' + ('ativo' if pagina_ativa == 'painel' else 'inativo') + '.png') }}" alt="">
+                <span>Painel</span>
+            </a>
+            <a class="item-navegacao {{ 'ativo' if pagina_ativa == 'produtos' else '' }}" href="{{ url_for('produtos') }}">
+                <img src="{{ url_for('static', filename='imagens/icones-menu/produtos-' + ('ativo' if pagina_ativa == 'produtos' else 'inativo') + '.png') }}" alt="">
+                <span>Produtos</span>
+            </a>
+            <a class="item-navegacao {{ 'ativo' if pagina_ativa == 'pedidos' else '' }}" href="{{ url_for('pedidos') }}">
+                <img src="{{ url_for('static', filename='imagens/icones-menu/pedidos-' + ('ativo' if pagina_ativa == 'pedidos' else 'inativo') + '.png') }}" alt="">
+                <span>Comandas</span>
+            </a>
+            <a class="item-navegacao {{ 'ativo' if pagina_ativa == 'historico' else '' }}" href="{{ url_for('historico') }}">
+                <img src="{{ url_for('static', filename='imagens/icones-menu/historico-' + ('ativo' if pagina_ativa == 'historico' else 'inativo') + '.png') }}" alt="">
+                <span>Histórico</span>
+            </a>
+        </nav>
+
+        <div class="ligacoes-barra-lateral">
+            <a href="{{ url_for('resumos') }}">Resumos</a>
+            <a href="{{ url_for('cartoes') }}">Gerenciar cartões</a>
+        </div>
+
+        <a class="cartao-operacao" href="{{ url_for('conta') }}">
+            <span class="ponto-situacao {{ 'aberto' if operacao else 'fechado' }}"></span>
+            <span>
+                <strong>{{ estabelecimento.nome if estabelecimento else 'FluxoPag' }}</strong>
+                <small>Operação • {{ 'Aberta' if operacao else 'Fechada' }}</small>
+            </span>
+        </a>
+    </aside>
+
+    <main class="conteudo-principal">
+        {% with mensagens = get_flashed_messages(with_categories=true) %}
+            {% if mensagens %}
+                <div class="lista-mensagens" aria-live="polite">
+                    {% for categoria, mensagem in mensagens %}
+                        <div class="mensagem {{ categoria }}">{{ mensagem }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block conteudo %}{% endblock %}
+    </main>
+
+    <script src="{{ url_for('static', filename='js/principal.js') }}"></script>
+    {% block roteiros %}{% endblock %}
+</body>
+</html>

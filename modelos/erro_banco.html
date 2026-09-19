@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banco de dados indisponível — FluxoPag</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+</head>
+<body class="pagina-centralizada">
+    <section class="cartao-isolado">
+        <h1>Não foi possível conectar ao MySQL</h1>
+        <p>Confira se o MySQL está iniciado e revise a conexão. Consulte o guia de instalação antes de inicializar ou alterar um banco existente.</p>
+        <a class="botao primario" href="{{ url_for('painel') }}">Tentar novamente</a>
+    </section>
+</body>
+</html>

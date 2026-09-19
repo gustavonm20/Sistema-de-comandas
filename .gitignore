@@ -1,0 +1,16 @@
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+*.sql.bak
+*.dump
+legacy/terminal-json/data/
+.DS_Store
+Thumbs.db

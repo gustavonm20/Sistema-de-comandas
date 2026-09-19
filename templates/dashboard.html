@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — FluxoPag{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <div>
+        <h1>Dashboard</h1>
+        <p>Acompanhe o movimento atual do estabelecimento.</p>
+    </div>
+    <a class="button primary" href="{{ url_for('order_create') }}">＋ Nova comanda</a>
+</div>
+
+<section class="metrics-grid">
+    <article class="metric-card primary-tone">
+        <span>Comandas abertas</span>
+        <strong>{{ dashboard.metrics.open_orders }}</strong>
+    </article>
+    <article class="metric-card green-tone">
+        <span>Vendas realizadas hoje</span>
+        <strong>{{ dashboard.metrics.completed_sales }}</strong>
+    </article>
+    <article class="metric-card orange-tone">
+        <span>Faturamento de hoje</span>
+        <strong>{{ format_money(dashboard.metrics.revenue) }}</strong>
+    </article>
+    <article class="metric-card blue-tone">
+        <span>Ticket médio</span>
+        <strong>{{ format_money(dashboard.metrics.average_ticket) }}</strong>
+    </article>
+</section>
+
+<div class="content-grid dashboard-grid">
+    <section class="panel">
+        <div class="panel-heading">
+            <h2>Comandas recentes</h2>
+            <a href="{{ url_for('orders') }}">Ver todas</a>
+        </div>
+
+        {% if dashboard.latest_orders %}
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Comanda</th>
+                            <th>Atendimento</th>
+                            <th>Abertura</th>
+                            <th class="align-right">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in dashboard.latest_orders %}
+                            <tr class="clickable-row" data-url="{{ url_for('order_details', order_id=order.order_id) }}">
+                                <td><strong>#{{ order.card_number }}</strong></td>
+                                <td>{{ order.service_label }}</td>
+                                <td>{{ format_datetime(order.opened_at) }}</td>
+                                <td class="align-right">{{ format_money(order.total) }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <h3>Nenhuma comanda aberta</h3>
+                <p>Abra uma comanda para iniciar o atendimento.</p>
+                <a class="button secondary" href="{{ url_for('order_create') }}">Abrir primeira comanda</a>
+            </div>
+        {% endif %}
+    </section>
+
+    <section class="panel">
+        <div class="panel-heading">
+            <h2>Vendas por hora</h2>
+            <span>Hoje</span>
+        </div>
+        <div class="bar-chart" aria-label="Gráfico do faturamento por hora">
+            {% for item in dashboard.trend %}
+                <div class="bar-column">
+                    <div class="bar-track">
+                        <div class="bar-value" style="height: {{ item.height }}%" title="{{ format_money(item.value) }}"></div>
+                    </div>
+                    <small>{{ item.label }}</small>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

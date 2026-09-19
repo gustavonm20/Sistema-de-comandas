@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}{{ page_title }} — FluxoPag{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <div>
+        <a class="back-link" href="{{ url_for('products') }}">← Voltar para produtos</a>
+        <h1>{{ page_title }}</h1>
+        <p>Preencha os dados que serão utilizados nas comandas.</p>
+    </div>
+</div>
+
+<section class="panel form-panel">
+    <form method="post" class="form-grid">
+        <label class="full-field">
+            <span>Nome do produto</span>
+            <input type="text" name="name" required minlength="2" maxlength="100"
+                   value="{{ request.form.get('name', product.name if product else '') }}">
+        </label>
+        <label>
+            <span>Preço</span>
+            <input type="text" name="price" inputmode="decimal" required placeholder="R$ 0,00"
+                   value="{{ request.form.get('price', ('%.2f'|format(product.price)|replace('.', ',')) if product else '') }}">
+        </label>
+        <label>
+            <span>Categoria</span>
+            {% set current_category = request.form.get('category_id', product.category_id if product else '')|string %}
+            <select name="category_id" required>
+                <option value="">Selecione</option>
+                {% for category in categories if category.active %}
+                    <option value="{{ category.category_id }}" {{ 'selected' if current_category == category.category_id|string else '' }}>
+                        {{ category.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </label>
+        <div class="form-actions full-field">
+            <a class="button secondary" href="{{ url_for('products') }}">Cancelar</a>
+            <button class="button primary" type="submit">Salvar produto</button>
+        </div>
+    </form>
+</section>
+{% endblock %}

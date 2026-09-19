@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Comandas — FluxoPag{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <div>
+        <h1>Comandas</h1>
+        <p>Acompanhe todos os atendimentos que estão em andamento.</p>
+    </div>
+    <div class="heading-actions">
+        <a class="button secondary" href="{{ url_for('cards') }}">Gerenciar cartões</a>
+        <a class="button primary" href="{{ url_for('order_create') }}">＋ Nova comanda</a>
+    </div>
+</div>
+
+<nav class="pill-tabs" aria-label="Filtrar comandas">
+    <a class="{{ 'active' if selected_service == 'all' else '' }}" href="{{ url_for('orders') }}">Todas</a>
+    <a class="{{ 'active' if selected_service == 'table' else '' }}" href="{{ url_for('orders', service_type='table') }}">Mesas</a>
+    <a class="{{ 'active' if selected_service == 'counter' else '' }}" href="{{ url_for('orders', service_type='counter') }}">Balcão</a>
+    <a class="{{ 'active' if selected_service == 'pickup' else '' }}" href="{{ url_for('orders', service_type='pickup') }}">Retirada</a>
+</nav>
+
+{% if orders %}
+    <section class="order-grid">
+        {% for order in orders %}
+            <article class="order-card">
+                <div class="order-card-header">
+                    <div>
+                        <span>Comanda</span>
+                        <strong>#{{ order.card_number }}</strong>
+                    </div>
+                    <span class="status-pill success">Aberta</span>
+                </div>
+                <dl>
+                    <div><dt>Atendimento</dt><dd>{{ order.service_label }}</dd></div>
+                    <div><dt>Itens</dt><dd>{{ order.item_count }}</dd></div>
+                    <div><dt>Abertura</dt><dd>{{ format_datetime(order.opened_at) }}</dd></div>
+                </dl>
+                <div class="order-total">
+                    <span>Total</span>
+                    <strong>{{ format_money(order.total) }}</strong>
+                </div>
+                <div class="order-actions">
+                    <a class="button secondary" href="{{ url_for('order_details', order_id=order.order_id) }}">Detalhes</a>
+                    <a class="button primary" href="{{ url_for('payment', order_id=order.order_id) }}">Finalizar</a>
+                </div>
+            </article>
+        {% endfor %}
+    </section>
+{% else %}
+    <section class="panel empty-state">
+        <h3>Nenhuma comanda aberta</h3>
+        <p>As comandas em atendimento aparecerão aqui.</p>
+        <a class="button primary" href="{{ url_for('order_create') }}">Abrir nova comanda</a>
+    </section>
+{% endif %}
+{% endblock %}

@@ -1,85 +1,52 @@
-# Regras de Negócio
+# Regras de negócio e decisões pendentes
 
-Este documento registra as regras atualmente definidas para o FluxoPag. Alterações relevantes devem atualizar este arquivo e a issue #1.
+[Índice](README.md) · [Evidências](STATUS.md) · [Banco](DATABASE.md)
 
-## 1. Conta do estabelecimento
+Os requisitos abaixo preservam a visão do proprietário. A coluna de comportamento descreve o código recuperado e consolidado; testes não significam que todos os cenários operacionais estejam resolvidos.
 
-- A conta autenticada representa o estabelecimento.
-- A primeira versão não depende de um funcionário específico para funcionar.
-- Os dados da conta incluem nome do estabelecimento, e-mail, tipo de negócio e preferências do sistema.
-- A conta exibe o estado atual da operação: aberta ou fechada.
+| Tema | Regra pretendida | Comportamento atual |
+| --- | --- | --- |
+| Identificação | Número fixo e reutilizável de quatro dígitos, sem nome do cliente obrigatório. | `CHAR(4)` e validação ASCII; identificação de mesa é opcional fora do tipo mesa. |
+| Ocupação | Um cartão físico não pode ter dois atendimentos abertos. | Coluna gerada e índice único garantem a exclusividade. |
+| Histórico | Fechar libera o número sem apagar o atendimento. | Pedido fica `closed`; itens e venda permanecem. |
+| Produtos | Nome, categoria, preço e estado ativo/inativo. | CRUD parcial sem exclusão física; categorias vêm do banco, sem tela de manutenção. |
+| Inatividade | Produto inativo permanece no histórico e não entra em novo consumo. | Serviço bloqueia inclusão; snapshots preservam dados anteriores. |
+| Preço histórico | Reajustar catálogo não altera preço já registrado. | `order_items.unit_price` guarda o preço da primeira inclusão daquele produto no pedido. |
+| Pagamento | Registrar recebimento e preservar venda. | Dinheiro, Pix, débito e crédito são escolhas registradas localmente. Não há processamento financeiro externo. |
+| Operação | Abrir antes de atender; conferir caixa ao encerrar; bloquear encerramento com pedidos abertos. | Serviços e tela presentes; falta completar segurança sob concorrência. |
+| Resumos | Visões distintas diária, semanal e mensal. | Três consultas/páginas por período de calendário; alinhamento com operação encerrada pendente. |
 
-## 2. Operação diária
+## Valores e pagamento
 
-- O estabelecimento deve iniciar o dia antes de contabilizar vendas e comandas.
-- A abertura registra data, horário e valor inicial do caixa.
-- Somente uma operação diária pode permanecer aberta por vez.
-- Enquanto a operação estiver aberta, vendas, comandas e faturamento são contabilizados no período.
-- O encerramento exige confirmação explícita.
-- O dia não pode ser finalizado enquanto existirem comandas abertas.
-- Ao concluir o fechamento, os dados do período ficam disponíveis nos resumos.
+A aplicação exige preço de produto **maior que zero**. O banco mantém `CHECK(price >= 0)` da base histórica. Essa diferença é preservada até uma decisão sobre produtos gratuitos ([#1](https://github.com/gustavonm20/Sistema-de-comandas/issues/1), [#11](https://github.com/gustavonm20/Sistema-de-comandas/issues/11)); ela não autoriza anunciar suporte a preço zero na interface. Inserções diretas no SQL podem passar por restrições diferentes das regras do serviço.
 
-## 3. Caixa
+Valores usam duas casas e `Decimal`; a entrada aceita vírgula decimal. Quantidades são inteiras entre 1 e 99 por produto no pedido. Não há consumo fracionado, desconto, gorjeta, taxa de serviço, parcelamento, pagamento dividido ou estorno implementado.
 
-- A abertura de caixa registra um valor inicial.
-- O fechamento calcula o valor esperado em dinheiro.
-- O usuário informa o valor efetivamente contado.
-- O sistema calcula a diferença entre valor esperado e valor contado.
-- Quando houver divergência, uma observação deve ser registrada.
-- A conferência fica vinculada à operação diária correspondente.
+Um pedido vazio ou com total não positivo não pode ser pago. Em dinheiro, o recebido deve cobrir o total; o troco é recebido menos total. Pix e cartões apenas registram o meio informado pelo atendente, sem confirmar transferência, gerar cobrança ou conversar com banco/adquirente.
 
-## 4. Produtos
+O fechamento grava venda, status e auditoria em uma transação. Uma falha deve preservar o pedido aberto e não deixar venda parcial. Há testes reais desse rollback e de repetição sequencial de fechamento; disputas entre conexões ainda são uma entrega separada na [#21](https://github.com/gustavonm20/Sistema-de-comandas/issues/21).
 
-- Cada produto possui identificador, nome, categoria, preço e estado ativo ou inativo.
-- Produtos inativos permanecem no histórico, mas não podem ser adicionados a novas comandas.
-- O preço deve ser maior que zero.
-- Alterações de produto não devem apagar informações de vendas já concluídas.
+## Operação e caixa
 
-## 5. Comandas
+- Existe um estabelecimento local, editável pela tela de conta. E-mail não é credencial; não há login, senha ou autorização.
+- O saldo inicial e o dinheiro contado aceitam zero; devem ser não negativos.
+- Saldo esperado = saldo inicial + total das vendas em dinheiro ligadas à operação. Pix, débito e crédito não entram no dinheiro físico.
+- Divergência = contado − esperado; valor diferente de zero exige justificativa entre 5 e 255 caracteres.
+- O fechamento verifica se há pedidos abertos. Não existe cancelamento de comanda vazia; esse caso precisa de regra e entrega em #12.
+- A operação pode atravessar meia-noite. Não há reabertura, sangria ou suprimento posterior. `DATETIME` não carrega fuso; servidor Python e MySQL devem estar alinhados.
+- A criação de pedidos ainda não compartilha o bloqueio da operação usado no encerramento. O bloqueio de pedidos pendentes está verificado em sequência, não sob corrida (#14).
 
-- A comanda é identificada por um número fixo e reutilizável.
-- Não é obrigatório informar o nome do cliente.
-- Uma comanda ocupada não pode ser aberta novamente.
-- Uma comanda aberta pode receber, alterar e remover itens.
-- O total deve ser recalculado após qualquer alteração.
-- Uma comanda fechada não pode mais ser editada.
-- Após pagamento e fechamento, o número é liberado para um novo atendimento.
+## Pontos que precisam de decisão ou implementação
 
-## 6. Pagamentos
+| Questão | Evidência / diferença | Encaminhamento |
+| --- | --- | --- |
+| Catálogo muda durante o atendimento | Nova inclusão do mesmo produto soma quantidade na linha existente e usa o preço inicial. | Definir se novas unidades terão outro preço; não reescrever unidades antigas (#1, #12). |
+| Edição disputa com fechamento | Status do pedido é lido antes da transação de itens. | Bloqueio comum e testes simultâneos (#21). |
+| Cancelamento de pedido vazio | Não é possível pagar total zero nem cancelar pela interface. | Definir cancelamento, motivo e preservação do registro (#12). |
+| Resumo de operação encerrada | Resumo atual usa data da venda, sem seleção de operação histórica. | Alinhar filtro e nomenclatura (#15). |
+| Comparação de períodos | Período atual incompleto é comparado ao anterior completo; semana começa segunda, mês é calendário. | Definir comparação equivalente e seleção de datas (#8, #15). |
+| Gráfico do dashboard | Barras cobrem 08h–20h, embora indicadores somem todas as vendas do dia. | Ajustar recorte e rótulo conforme decisão (#15, #16). |
+| Dados e acesso | Ator de auditoria fixo; formulários sem CSRF. | Autenticação e proteção antes de exposição pública (#24). |
+| Estoque | Não existe saldo ou baixa na aplicação recuperada. | Extensão posterior, sem bloquear o catálogo básico (#20). |
 
-- As formas previstas para o MVP são dinheiro, Pix, cartão de débito e cartão de crédito.
-- Pagamentos em dinheiro devem calcular o troco.
-- A venda somente é registrada depois da confirmação do pagamento.
-- O valor pago deve corresponder ao total final da comanda.
-- O pagamento registra data, horário, valor e forma utilizada.
-
-## 7. Histórico
-
-- Toda comanda paga gera um registro permanente no histórico.
-- O histórico deve preservar itens, quantidades, valores, forma de pagamento e identificação da comanda.
-- As vendas podem ser filtradas por período e forma de pagamento.
-- Alterações posteriores em produtos não modificam vendas antigas.
-
-## 8. Resumos
-
-- O resumo diário usa os dados da operação encerrada.
-- Os resumos semanal e mensal consolidam as vendas dos respectivos períodos.
-- Os indicadores iniciais são:
-  - comandas atendidas;
-  - vendas realizadas;
-  - faturamento;
-  - ticket médio;
-  - desempenho por faixa de horário, dia ou semana;
-  - produtos mais vendidos.
-- O sistema deve comparar o período selecionado com o período anterior equivalente.
-- Períodos sem dados devem possuir um estado vazio claro.
-
-## 9. Regras ainda pendentes
-
-- permissões e perfis de funcionários;
-- cancelamento de vendas;
-- estorno de pagamentos;
-- reabertura controlada de uma operação encerrada;
-- retiradas e reforços manuais de caixa;
-- política de backup e retenção;
-- integração fiscal.
+As decisões devem ser registradas na issue e refletidas em testes, documentos e Figma. Documentação isolada não encerra a implementação.

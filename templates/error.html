@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erro — FluxoPag</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="centered-page">
+    <section class="standalone-card">
+        <h1>Não foi possível concluir</h1>
+        <p>{{ message }}</p>
+        <a class="button primary" href="{{ url_for('dashboard') }}">Voltar ao Dashboard</a>
+    </section>
+</body>
+</html>

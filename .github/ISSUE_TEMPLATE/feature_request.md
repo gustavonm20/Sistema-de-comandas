@@ -1,39 +1,35 @@
 ---
-name: Solicitação de funcionalidade
-about: Proponha uma nova funcionalidade ou melhoria para o FluxoPag
+name: Funcionalidade ou melhoria
+about: Defina uma entrega verificável para o FluxoPag
 title: "[Área] "
 labels: ""
-assignees: "gustavonm20"
+assignees: ""
 ---
 
 ## Objetivo
 
-Descreva de forma direta o problema que esta funcionalidade deve resolver.
+Qual problema do atendimento ou da manutenção será resolvido?
 
-## Contexto
+## Estado atual e lacuna
 
-Explique onde a necessidade aparece e quem será beneficiado.
+O que já existe no código ou Figma? Inclua evidência, sem confundir tela e implementação. Confira issues relacionadas para evitar duplicação.
 
 ## Escopo
 
-- [ ] Entrega 1
-- [ ] Entrega 2
-- [ ] Entrega 3
-
-## Regras de negócio
-
-Liste as regras que precisam ser respeitadas.
+- [ ] Entrega concreta e delimitada.
 
 ## Critérios de aceitação
 
-- O comportamento esperado deve ser verificável.
-- Estados de erro e vazio devem ser considerados.
-- Mudanças visuais devem seguir o Figma.
+Descreva resultados observáveis, estados vazios/erros e as regras preservadas. Diferencie registrar pagamento e processá-lo externamente quando aplicável.
 
-## Dependências
+## Dependências e referências
 
-Informe issues, telas ou funcionalidades necessárias antes desta tarefa.
+Issues, arquivos, documentação e frame Figma. Informe decisões ainda abertas.
 
-## Referências
+## Validação
 
-Adicione links, imagens ou telas do Figma quando aplicável.
+Como demonstrar o comportamento? Indique teste pertinente, dados fictícios e necessidade de MySQL real.
+
+## Organização
+
+Sugira prioridade, área e fase do roadmap, sem inventar prazo ou responsável.

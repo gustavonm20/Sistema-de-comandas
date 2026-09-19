@@ -66,6 +66,6 @@ python -m unittest discover -p "teste_*.py" -v
 
 ## integração contínua e verificações ainda pendentes
 
-[verificar.yml](../.github/workflows/verificar.yml) instala as três dependências, sobe MySQL, inicializa banco isolado e executa aplicação, legado e ligações. Usa `unittest`, já presente nos artefatos; não exige adotar Pytest apenas por constar de um plano antigo. A rotina não configura proteção do ramo: tornar verificações obrigatórios é uma configuração administrativa separada.
+[verificar.yml](../.github/workflows/verificar.yml) instala as três dependências, sobe MySQL, inicializa banco isolado e executa aplicação, legado e ligações. Usa `unittest`, já presente nos artefatos; não exige adotar Pytest apenas por constar de um plano antigo. A rotina não configura proteção do ramo: tornar verificações obrigatórias é uma configuração administrativa separada.
 
 Ainda faltam: conexões concorrentes (#21, #14), migrações com dados antigos (#19), autenticação/CSRF (#24), acessibilidade e navegação real em computador/tablet (#16), revisão da instalação no Windows, testes completos dos filtros/POSTs HTTP e cenários de períodos sem dados/virada de ano (#15, #17). Não existe percentual de cobertura medido nem medição de desempenho publicado.

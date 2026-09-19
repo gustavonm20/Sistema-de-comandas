@@ -34,7 +34,7 @@ Uma solicitação de integração aberta não encerra automaticamente uma tarefa
 6. Vincular a [solicitação de integração #25](https://github.com/gustavonm20/Sistema-de-comandas/pull/25) e marcar seu item como **Concluído**: a integração à `main` foi confirmada em 17/09/2026. Manter as tarefas de funcionalidades nos estados da tabela até satisfazer seus próprios critérios. Preservar os itens históricos das solicitações de integração #18/#22/#23, quando já presentes.
 7. Para etiquetas de área/prioridade, preferir os campos do Projects. Se filtros no repositório exigirem etiquetas, criar apenas as correspondentes necessárias; não duplicar toda a taxonomia sem necessidade.
 
-| Issue | Situação proposto | Prioridade | Área | Milestone proposto | Label aplicada |
+| Tarefa | Situação proposta | Prioridade | Área | Marco proposto | Etiqueta aplicada |
 | --- | --- | --- | --- | --- | --- |
 | [#1](https://github.com/gustavonm20/Sistema-de-comandas/issues/1) | A fazer | alta | produto | Base consolidada | `documentation` |
 | [#2](https://github.com/gustavonm20/Sistema-de-comandas/issues/2) | Pendências | normal | projeto visual | Interface e resumos | `enhancement` |
@@ -64,8 +64,8 @@ Não há trabalho marcado como Em andamento só por existir no plano. O código 
 Aplicar quando houver ferramenta/permissão para configurações:
 
 - **Descrição:** `FluxoPag — Sistema de Comandas em Python, Flask e MySQL para pequenos estabelecimentos. Produtos, atendimentos e pagamentos registrados; aplicação em evolução.`
-- **Topics:** `python`, `flask`, `mysql`, `html`, `css`, `javascript`, `comandas`, `fluxopag`.
-- **Website/reference:** `https://www.figma.com/design/Rau8PgbGwiiJwRo9MHgzMW/Comandas?node-id=0-1` — identificado no README como **referência de projeto visual**, sem sugerir implantação da aplicação.
-- **Checks obrigatórios:** avaliar `python-and-mysql` na proteção do ramo após revisar as permissões e o fluxo do proprietário. A rotina sozinho não bloqueia integração.
+- **Tópicos:** `python`, `flask`, `mysql`, `html`, `css`, `javascript`, `comandas`, `fluxopag`.
+- **Página de referência:** `https://www.figma.com/design/Rau8PgbGwiiJwRo9MHgzMW/Comandas?node-id=0-1` — identificado no README como **referência de projeto visual**, sem sugerir implantação da aplicação.
+- **Verificações obrigatórias:** avaliar `python-e-mysql` na proteção do ramo após revisar as permissões e o fluxo do proprietário. A rotina sozinha não bloqueia integração.
 
 A decisão de licença e um canal privado suportado para relatos de segurança também pertencem ao proprietário; esta organização não cria endereço de contato, versão suportada ou licença fictícia.

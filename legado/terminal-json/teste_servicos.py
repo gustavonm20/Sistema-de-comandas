@@ -65,6 +65,26 @@ class TestesServicoComandas(unittest.TestCase):
         recarregado = ServicoComandas(instancia.servico.armazenamento.caminho_arquivo)
         instancia.assertEqual(recarregado.produtos[0].nome, "Coxinha")
 
+    def teste_carrega_formato_antigo_sem_sobrescrever(instancia):
+        import json
+        raiz = Path(instancia.diretorio_temporario.name)
+        anterior = raiz / "data" / "database.json"
+        anterior.parent.mkdir()
+        # Chaves do contrato antigo são mantidas somente neste cenário de compatibilidade.
+        conteudo = json.dumps({"products": [{"product_id": 8, "name": "Café antigo", "price_cents": 550, "category": "Bebidas", "active": True}], "open_orders": [], "sales": [], "cash_sessions": []})
+        anterior.write_text(conteudo)
+        destino = raiz / "dados" / "banco.json"
+        servico = ServicoComandas(destino)
+        instancia.assertEqual(servico.produtos[0].preco_centavos, 550)
+        servico.adicionar_produto("Bolo", 900, "Sobremesas")
+        instancia.assertEqual(anterior.read_text(), conteudo)
+        instancia.assertEqual(len(json.loads(destino.read_text())["produtos"]), 2)
+
+    def teste_recusa_chaves_antigas_e_novas_duplicadas(instancia):
+        from compatibilidade import converter_dados_antigos
+        with instancia.assertRaisesRegex(ValueError, "mistura chaves"):
+            converter_dados_antigos({"products": [], "produtos": []})
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -80,7 +80,7 @@ class AplicacaoTerminal:
         if not produtos: print("Nenhum produto encontrado.")
         for produto in produtos:
             situacao = "Ativo" if produto.ativo else "Desativado"
-            print(f"Código: {produto.id_produto} | Nome: {produto.nome} | Preço: {formatar_dinheiro(produto.preco_centavos)} | Categoria: {produto.categoria} | Status: {situacao}")
+            print(f"Código: {produto.id_produto} | Nome: {produto.nome} | Preço: {formatar_dinheiro(produto.preco_centavos)} | Categoria: {produto.categoria} | Situação: {situacao}")
         if pausar: instancia.pausar()
 
     def pesquisar_produto(instancia) -> None:

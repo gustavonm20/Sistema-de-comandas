@@ -7,13 +7,13 @@ Inspeção do arquivo realizada em **17/09/2026**. Essa é a data da revisão, n
 - [Arquivo de projeto visual — FluxoPag / Comandas](https://www.figma.com/design/Rau8PgbGwiiJwRo9MHgzMW/Comandas?node-id=0-1)
 - [Protótipo interativo — entrada no painel](https://www.figma.com/proto/Rau8PgbGwiiJwRo9MHgzMW/Comandas?page-id=0%3A1&node-id=12-2&starting-point-node-id=12%3A2)
 
-O segundo endereço usa o quadro `12:2`, confirmado como ponto inicial em `flowStartingPoints`. O arquivo e suas reações foram inspecionados; o player completo não foi exercitado de ponta a ponta. Portanto, o endereço do protótipo está separado da referência de edição sem afirmar que toda navegação está concluída.
+O segundo endereço usa o quadro `12:2`, confirmado como ponto inicial em `flowStartingPoints`. O arquivo e suas reações foram inspecionados; o visualizador completo não foi exercitado de ponta a ponta. Portanto, o endereço do protótipo está separado da referência de edição sem afirmar que toda navegação está concluída.
 
 ## Por que prototipar
 
 O protótipo de terminal ajudou a praticar lógica. O Figma tornou o produto pretendido visível: organizar a navegação, explorar a sequência de tarefas do atendente, definir a marca FluxoPag, perceber estados ausentes e orientar a implementação web. Esses são objetivos da fase de prototipação. Não foram encontrados registros que comprovem pesquisa com usuários, testes de usabilidade, validação comercial ou redução de erros no atendimento.
 
-**Low-fi**, ou esboço de tela, é o rascunho da estrutura: onde ficam as informações e quais ações existem. **Alta fidelidade** detalha cores, tipografia, ícones, espaçamento e estados mais próximos da interface desejada. Um quadro alta fidelidade, por si só, não comprova que sua ação está conectada nem implementada em Flask.
+**Baixa fidelidade**, ou esboço de tela, é o rascunho da estrutura: onde ficam as informações e quais ações existem. **Alta fidelidade** detalha cores, tipografia, ícones, espaçamento e estados mais próximos da interface desejada. Um quadro alta fidelidade, por si só, não comprova que sua ação está conectada nem implementada em Flask.
 
 ![Painel exportado do Figma, com a identidade azul e laranja do FluxoPag](imagens/figma-painel.png)
 
@@ -21,9 +21,9 @@ O protótipo de terminal ajudou a praticar lógica. O Figma tornou o produto pre
 
 ## Telas, finalidade e entrega
 
-Foram encontrados **16 quadros alta fidelidade e 10 baixa fidelidade** na página `0:1`. A tabela agrupa apenas estados relacionados para manter a leitura curta. Os ligações levam aos quadros de projeto visual; a situação do código refere-se à versão consolidada na `main`.
+Foram encontrados **16 quadros alta fidelidade e 10 baixa fidelidade** na página `0:1`. A tabela agrupa apenas estados relacionados para manter a leitura curta. As ligações levam aos quadros de projeto visual; a situação do código refere-se à versão consolidada na `main`.
 
-| Tela / quadro alta fidelidade | Finalidade | Estado do projeto visual | Estado da implementação | Issue |
+| Tela / quadro alta fidelidade | Finalidade | Estado do projeto visual | Estado da implementação | Tarefa |
 | --- | --- | --- | --- | --- |
 | [Painel — 12:2](https://www.figma.com/design/Rau8PgbGwiiJwRo9MHgzMW/Comandas?node-id=12-2) | Visão do atendimento e das vendas | Alta fidelidade e baixa fidelidade `36:444`; textos ilustrativos a revisar | Página Flask e consultas testadas; gráfico limita horas a 08h–20h | #16, #15 |
 | [Produtos — 12:3](https://www.figma.com/design/Rau8PgbGwiiJwRo9MHgzMW/Comandas?node-id=12-3) | Consultar e administrar catálogo | Alta fidelidade e baixa fidelidade `36:463` | cadastro, consulta, edição e desativação MySQL verificado; revisão visual pendente | #11 |

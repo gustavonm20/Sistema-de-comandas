@@ -175,7 +175,7 @@ def listar_produtos():
             f"Nome: {produto.nome} | "
             f"Preço: {formatar_moeda(produto.preco)} | "
             f"Categoria: {produto.categoria} | "
-            f"Status: {situacao}"
+            f"Situação: {situacao}"
         )
 
 
@@ -209,7 +209,7 @@ def pesquisar_produto():
             f"Nome: {produto.nome} | "
             f"Preço: {formatar_moeda(produto.preco)} | "
             f"Categoria: {produto.categoria} | "
-            f"Status: {situacao}"
+            f"Situação: {situacao}"
         )
 
 

@@ -28,13 +28,13 @@ A fase de Figma tornou a experiência pretendida concreta: estrutura das telas, 
 
 | Recurso | Implementação atual | Projeto visual |
 | --- | --- | --- |
-| Produtos: cadastrar, buscar, editar, ativar/desativar | cadastro, consulta, edição e desativação e persistência verificados com MySQL; revisão visual pendente | Tela alta fidelidade e baixa fidelidade |
+| Produtos: cadastrar, buscar, editar, ativar/desativar | Cadastro, consulta, edição, desativação e persistência verificados com MySQL; revisão visual pendente | Tela alta fidelidade e baixa fidelidade |
 | Comandas e itens, total e reutilização | Parcial: fluxo presente; concorrência pendente | Telas principais presentes |
 | Pagamento e histórico | Registro local, troco, cópias históricas e reversão verificados; concorrência pendente | Pagamento e histórico presentes |
 | Conta e operação diária | Dados do estabelecimento e caixa presentes; sem autenticação | Conta, abertura, bloqueio e conferência presentes; conexões incompletas |
 | Resumos de dia, semana e mês | Três visões por URL; consultas presentes; regras de período parcialmente alinhadas | Três telas alta fidelidade; comparativos pendentes |
 | Tema claro/escuro e menu adaptável | CSS e JavaScript presentes; revisão visual completa pendente | Prévia principal clara |
-| Autenticação, CSRF, migrações e estoque | Planejados; estoque é extensão posterior | Nem toda extensão possui tela verificada |
+| Autenticação, CSRF e estoque | Planejados; estoque é extensão posterior | Nem toda extensão possui tela verificada |
 
 O pagamento é **registrado pelo atendente**. Não há cobrança de cartão, confirmação bancária de Pix ou integração com adquirente. A [matriz completa](documentacao/SITUACAO.md) associa recursos, arquivos, verificações e tarefas.
 
@@ -64,7 +64,7 @@ O navegador envia formulários a [aplicacao.py](aplicacao.py); [servicos.py](ser
 | Caminho | Responsabilidade |
 | --- | --- |
 | [aplicacao.py](aplicacao.py), [servicos.py](servicos.py), [utilitarios.py](utilitarios.py) | Entrada web, regras e utilitários |
-| [banco_dados/](banco_dados/) | Estrutura atual, exemplos e estrutura histórico preservado |
+| [banco_dados/](banco_dados/) | Estrutura atual, exemplos e estrutura histórica preservada |
 | [inicializar_banco.py](inicializar_banco.py) | Inicialização protegida para banco vazio |
 | [modelos/](modelos/), [estaticos/](estaticos/) | Interface e recursos recuperados |
 | [testes/](testes/) | Verificações locais e integração optativa com MySQL real |
@@ -75,7 +75,7 @@ Veja a [arquitetura](documentacao/ARQUITETURA.md), o [modelo de dados](documenta
 
 ## Executar localmente
 
-Você precisa de Python e de um **MySQL Servidor em execução**. O Workbench é a interface de administração; ele não substitui o servidor.
+Você precisa de Python e de um **servidor MySQL em execução**. O Workbench é a interface de administração; ele não substitui o servidor.
 
 ```powershell
 git clone https://github.com/gustavonm20/Sistema-de-comandas.git
@@ -93,7 +93,7 @@ python inicializar_banco.py --usuario root --solicitar-senha
 python aplicacao.py
 ```
 
-Cadastre produtos e inicie a operação em **Conta e operação**. O inicializador recusa bancos que já contêm tabelas: **a estrutura novo não é uma migração do banco antigo**. Preserve seus dados e consulte [compatibilidade](documentacao/BANCO_DADOS.md).
+Cadastre produtos e inicie a operação em **Conta e operação**. O inicializador recusa bancos que já contêm tabelas: **a estrutura nova não é uma migração do banco antigo**. Preserve seus dados e consulte [compatibilidade](documentacao/BANCO_DADOS.md).
 
 Linux/macOS usam `python3 -m venv .venv`, `source .venv/bin/activate` e `cp .env.exemplo .env`; o restante é igual. Para o treino inicial, execute separadamente `python "protótipo-inicial.py"`.
 
@@ -118,7 +118,7 @@ Leia as [regras e casos de borda](documentacao/REGRAS_NEGOCIO.md). Não há impl
 
 ## Próximos passos e participação
 
-A prioridade é revisar e aceitar o catálogo da [tarefa #11](https://github.com/gustavonm20/Sistema-de-comandas/issues/11), corrigir a transação sob concorrência na #21 e preparar migrações antes de usar dados existentes. O [planejamento](PLANEJAMENTO.md) mantém as fases e dependências; a [política do Kanban](documentacao/QUADRO_TAREFAS.md) distingue propostas de alterações efetivamente aplicadas ao quadro.
+A prioridade é revisar e aceitar o catálogo da [tarefa #11](https://github.com/gustavonm20/Sistema-de-comandas/issues/11), corrigir a transação sob concorrência na #21 e ampliar a conversão para outras estruturas antigas. O [planejamento](PLANEJAMENTO.md) mantém as fases e dependências; a [política do Kanban](documentacao/QUADRO_TAREFAS.md) distingue propostas de alterações efetivamente aplicadas ao quadro.
 
 [Como contribuir](CONTRIBUICAO.md) · [Competências demonstradas](documentacao/COMPETENCIAS.md) · [Histórico de mudanças](ALTERACOES.md) · [Orientações para agentes](AGENTS.md)
 

@@ -110,12 +110,12 @@ def listar_produtos(busca="", id_categoria=None, situacao="todos"):
 
     return buscar_todos(
         f"""
-        SELECT p.product_id, p.name, p.price, p.active,
-               p.category_id, c.name AS category_name
-        FROM products p
-        JOIN categories c ON c.category_id = p.category_id
+        SELECT p.id_produto, p.nome, p.preco, p.ativo,
+               p.id_categoria, c.nome AS nome_categoria
+        FROM produtos p
+        JOIN categorias c ON c.id_categoria = p.id_categoria
         WHERE {' AND '.join(condicoes)}
-        ORDER BY p.active DESC, p.name
+        ORDER BY p.ativo DESC, p.nome
         """,
         tuple(parametros),
     )
@@ -221,16 +221,16 @@ def listar_cartoes_comanda(situacao="todos"):
 
     return buscar_todos(
         f"""
-        SELECT c.card_id, c.card_number, c.active, o.order_id,
-               o.service_label, o.opened_at,
-               COALESCE(SUM(i.quantity * i.unit_price), 0) AS total
-        FROM command_cards c
-        LEFT JOIN orders o ON o.card_id = c.card_id AND o.status = 'open'
-        LEFT JOIN order_items i ON i.order_id = o.order_id
+        SELECT c.id_cartao, c.numero_cartao, c.ativo, o.id_pedido,
+               o.identificacao_atendimento, o.aberto_em,
+               COALESCE(SUM(i.quantidade * i.preco_unitario), 0) AS total
+        FROM cartoes_comanda c
+        LEFT JOIN pedidos o ON o.id_cartao = c.id_cartao AND o.situacao = 'aberto'
+        LEFT JOIN itens_pedido i ON i.id_pedido = o.id_pedido
         WHERE {' AND '.join(condicoes)}
-        GROUP BY c.card_id, c.card_number, c.active,
-                 o.order_id, o.service_label, o.opened_at
-        ORDER BY c.card_number
+        GROUP BY c.id_cartao, c.numero_cartao, c.ativo,
+                 o.id_pedido, o.identificacao_atendimento, o.aberto_em
+        ORDER BY c.numero_cartao
         """
     )
 
@@ -375,15 +375,15 @@ def listar_pedidos_abertos(tipo_atendimento="todos"):
         parametros = (tipo_atendimento,)
     return buscar_todos(
         f"""
-        SELECT o.order_id, c.card_number, o.service_type, o.service_label,
-               o.opened_at, COALESCE(SUM(i.quantity * i.unit_price), 0) AS total,
-               COALESCE(SUM(i.quantity), 0) AS item_count
-        FROM orders o
-        JOIN command_cards c ON c.card_id = o.card_id
-        LEFT JOIN order_items i ON i.order_id = o.order_id
-        WHERE o.status = 'open' {condicao}
-        GROUP BY o.order_id, c.card_number, o.service_type, o.service_label, o.opened_at
-        ORDER BY o.opened_at
+        SELECT o.id_pedido, c.numero_cartao, o.tipo_atendimento, o.identificacao_atendimento,
+               o.aberto_em, COALESCE(SUM(i.quantidade * i.preco_unitario), 0) AS total,
+               COALESCE(SUM(i.quantidade), 0) AS quantidade_itens
+        FROM pedidos o
+        JOIN cartoes_comanda c ON c.id_cartao = o.id_cartao
+        LEFT JOIN itens_pedido i ON i.id_pedido = o.id_pedido
+        WHERE o.situacao = 'aberto' {condicao}
+        GROUP BY o.id_pedido, c.numero_cartao, o.tipo_atendimento, o.identificacao_atendimento, o.aberto_em
+        ORDER BY o.aberto_em
         """,
         parametros,
     )
@@ -655,12 +655,12 @@ def listar_vendas(busca="", forma_pagamento="todos", data_inicial="", data_final
 
     return buscar_todos(
         f"""
-        SELECT s.sale_id, s.order_id, s.card_number_snapshot, s.total_amount,
-               s.payment_method, s.sold_at, o.service_label
-        FROM sales s
-        JOIN orders o ON o.order_id = s.order_id
+        SELECT s.id_venda, s.id_pedido, s.numero_cartao_historico, s.valor_total,
+               s.forma_pagamento, s.vendido_em, o.identificacao_atendimento
+        FROM vendas s
+        JOIN pedidos o ON o.id_pedido = s.id_pedido
         WHERE {' AND '.join(condicoes)}
-        ORDER BY s.sold_at DESC
+        ORDER BY s.vendido_em DESC
         """,
         tuple(parametros),
     )

@@ -155,7 +155,7 @@ def situacao_produto(id_produto):
     try:
         ativo = request.form.get("ativo") == "true"
         alterar_situacao_produto(id_produto, ativo)
-        flash("Status do produto atualizado.", "sucesso")
+        flash("Situação do produto atualizada.", "sucesso")
     except ErroServico as erro:
         flash(str(erro), "erro")
     return redirect(url_for("produtos"))
@@ -185,7 +185,7 @@ def situacao_cartao(id_cartao):
     try:
         ativo = request.form.get("ativo") == "true"
         alterar_situacao_cartao(id_cartao, ativo)
-        flash("Status da comanda atualizado.", "sucesso")
+        flash("Situação da comanda atualizada.", "sucesso")
     except ErroServico as erro:
         flash(str(erro), "erro")
     return redirect(url_for("cartoes"))
@@ -213,7 +213,7 @@ def criar_pedido_rota():
                 request.form.get("observacao"),
             )
             flash("Comanda aberta com sucesso.", "sucesso")
-            return redirect(url_for("detalhes_pedido", order_id=id_pedido))
+            return redirect(url_for("detalhes_pedido", id_pedido=id_pedido))
         except ErroServico as erro:
             flash(str(erro), "erro")
 
@@ -243,7 +243,7 @@ def adicionar_item_rota(id_pedido):
         flash("Produto adicionado à comanda.", "sucesso")
     except ErroServico as erro:
         flash(str(erro), "erro")
-    return redirect(url_for("detalhes_pedido", order_id=id_pedido))
+    return redirect(url_for("detalhes_pedido", id_pedido=id_pedido))
 
 
 @aplicacao.post("/pedidos/<int:id_pedido>/itens/<int:id_item>/quantidade")
@@ -252,7 +252,7 @@ def atualizar_item_rota(id_pedido, id_item):
         atualizar_item_pedido(id_pedido, id_item, request.form.get("quantidade"))
     except ErroServico as erro:
         flash(str(erro), "erro")
-    return redirect(url_for("detalhes_pedido", order_id=id_pedido))
+    return redirect(url_for("detalhes_pedido", id_pedido=id_pedido))
 
 
 @aplicacao.post("/pedidos/<int:id_pedido>/itens/<int:id_item>/remover")
@@ -262,7 +262,7 @@ def remover_item_rota(id_pedido, id_item):
         flash("Produto removido da comanda.", "sucesso")
     except ErroServico as erro:
         flash(str(erro), "erro")
-    return redirect(url_for("detalhes_pedido", order_id=id_pedido))
+    return redirect(url_for("detalhes_pedido", id_pedido=id_pedido))
 
 
 @aplicacao.route("/pedidos/<int:id_pedido>/pagamento", methods=["GET", "POST"])
@@ -276,7 +276,7 @@ def pagamento(id_pedido):
                 request.form.get("valor_recebido"),
             )
             flash("Pagamento registrado e comanda liberada.", "sucesso")
-            return redirect(url_for("detalhes_venda", sale_id=id_venda))
+            return redirect(url_for("detalhes_venda", id_venda=id_venda))
         except ErroServico as erro:
             flash(str(erro), "erro")
 

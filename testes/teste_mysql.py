@@ -18,6 +18,9 @@ class TestesIntegracaoMySQL(unittest.TestCase):
     def setUp(instancia):
         if not aplicacao.config["MYSQL_BANCO"].startswith("fluxopag_teste_"):
             raise RuntimeError("Os testes só podem limpar bancos com prefixo fluxopag_teste_.")
+        configuracao = patch.dict(aplicacao.config, TESTING=True)
+        configuracao.start()
+        instancia.addCleanup(configuracao.stop)
         instancia.contexto = aplicacao.app_context()
         instancia.contexto.push()
         instancia.addCleanup(instancia.contexto.pop)
@@ -171,33 +174,37 @@ class TestesIntegracaoMySQL(unittest.TestCase):
             if periodo != "diario":
                 instancia.assertRegex(resumo["evolucao"][0]["rotulo"], r"^\d{2}/\d{2}$")
         cliente = aplicacao.test_client()
-        for caminho in ("/", "/produtos", "/produtos/novo", f"/products/{instancia.id_produto}/editar",
-                     "/cartoes", "/pedidos", "/pedidos/novo", f"/orders/{id_pedido}",
-                     f"/orders/{id_pedido}/payment", "/historico", f"/sales/{id_venda}",
+        for caminho in ("/", "/produtos", "/produtos/novo", f"/produtos/{instancia.id_produto}/editar",
+                     "/cartoes", "/pedidos", "/pedidos/novo", f"/pedidos/{id_pedido}",
+                     f"/pedidos/{id_pedido}/pagamento", "/historico", f"/vendas/{id_venda}",
                      "/resumos?periodo=diario", "/resumos?periodo=semanal", "/resumos?periodo=mensal", "/conta"):
             with instancia.subTest(caminho=caminho):
                 instancia.assertEqual(cliente.get(caminho).status_code, 200)
 
     def teste_formularios_em_portugues_com_fluxo_completo(instancia):
         cliente = aplicacao.test_client()
-        resposta = cliente.post("/produtos/novo", data={"nome": "Bolo fictício", "preco": "8,50", "id_categoria": instancia.id_categoria})
+        def enviar_formulario(caminho, **parametros):
+            resposta = cliente.post(caminho, **parametros)
+            instancia.assertEqual(resposta.status_code, 302)
+            return resposta
+        resposta = enviar_formulario("/produtos/novo", data={"nome": "Bolo fictício", "preco": "8,50", "id_categoria": instancia.id_categoria})
         instancia.assertEqual(resposta.status_code, 302)
         bolo = buscar_um("SELECT id_produto FROM produtos WHERE nome = 'Bolo fictício'")["id_produto"]
-        cliente.post(f"/produtos/{bolo}/editar", data={"nome": "Bolo revisado", "preco": "9,00", "id_categoria": instancia.id_categoria})
-        cliente.post("/operacao/abrir", data={"caixa_inicial": "100,00"})
-        cliente.post("/pedidos/novo", data={"id_cartao": instancia.id_cartao, "tipo_atendimento": "mesa", "identificacao_atendimento": "4", "observacao": "Pedido fictício"})
+        enviar_formulario(f"/produtos/{bolo}/editar", data={"nome": "Bolo revisado", "preco": "9,00", "id_categoria": instancia.id_categoria})
+        enviar_formulario("/operacao/abrir", data={"caixa_inicial": "100,00"})
+        enviar_formulario("/pedidos/novo", data={"id_cartao": instancia.id_cartao, "tipo_atendimento": "mesa", "identificacao_atendimento": "4", "observacao": "Pedido fictício"})
         pedido = buscar_um("SELECT id_pedido FROM pedidos WHERE situacao = 'aberto'")["id_pedido"]
-        cliente.post(f"/pedidos/{pedido}/itens", data={"id_produto": bolo, "quantidade": "2"})
+        enviar_formulario(f"/pedidos/{pedido}/itens", data={"id_produto": bolo, "quantidade": "2"})
         item = servicos.obter_pedido(pedido)["itens"][0]["id_item"]
-        cliente.post(f"/pedidos/{pedido}/itens/{item}/quantidade", data={"quantidade": "3"})
+        enviar_formulario(f"/pedidos/{pedido}/itens/{item}/quantidade", data={"quantidade": "3"})
         instancia.assertEqual(servicos.obter_pedido(pedido)["total"], Decimal("27.00"))
         resposta = cliente.get(f"/pedidos/{pedido}/pagamento")
         instancia.assertEqual(resposta.status_code, 200)
         instancia.assertIn('name="forma_pagamento"', resposta.get_data(as_text=True))
-        cliente.post(f"/pedidos/{pedido}/pagamento", data={"forma_pagamento": "dinheiro", "valor_recebido": "30,00"})
+        enviar_formulario(f"/pedidos/{pedido}/pagamento", data={"forma_pagamento": "dinheiro", "valor_recebido": "30,00"})
         venda = buscar_um("SELECT * FROM vendas WHERE id_pedido = %s", (pedido,))
         instancia.assertEqual(venda["troco"], Decimal("3.00"))
-        cliente.post(f"/produtos/{bolo}/situacao", data={"ativo": "false"})
+        enviar_formulario(f"/produtos/{bolo}/situacao", data={"ativo": "false"})
         instancia.assertFalse(servicos.obter_produto(bolo)["ativo"])
-        cliente.post("/operacao/fechar", data={"caixa_contado": "127,00", "justificativa_diferenca": ""})
+        enviar_formulario("/operacao/fechar", data={"caixa_contado": "127,00", "justificativa_diferenca": ""})
         instancia.assertIsNone(servicos.obter_operacao_aberta())

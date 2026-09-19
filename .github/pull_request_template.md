@@ -16,8 +16,8 @@ Registre impactos na estrutura, compatibilidade, regras ambíguas e trabalho res
 
 ## Revisão
 
-- [ ] Stack, nomes históricos e invariantes preservados.
+- [ ] Tecnologias, nomes históricos e invariantes preservados.
 - [ ] Validação proporcional ao risco executada e descrita.
-- [ ] Setup, documentação e situação refletem o código.
+- [ ] Instalação, documentação e situação refletem o código.
 - [ ] Sem segredos, dados reais ou arquivos locais desnecessários.
 - [ ] Origem de código/recursos recuperados ou externos registrada.

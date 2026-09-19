@@ -24,6 +24,8 @@ No ambiente local de consolidação, sem MySQL instalado, passaram 24 testes da 
 
 A inspeção de `app.url_map` confirmou 21 regras (20 da aplicação e arquivos estáticos). O protótipo inicial teve sintaxe e abertura/saída do menu verificadas.
 
+A [execução 35215464669](https://github.com/gustavonm20/Sistema-de-comandas/actions/runs/35215464669), no commit `21aa781e5638216125c767350befe12a2ed0e813`, confirmou novamente os testes e verificou a documentação publicada: 138 links locais/imagens em 22 arquivos Markdown.
+
 ## Executar sem MySQL
 
 Na raiz, com as dependências instaladas:

@@ -8,7 +8,7 @@ Aplicação em Python e Flask para padarias, restaurantes, cafés e pequenos est
 
 [Documentação](docs/README.md) · [Instalação](docs/SETUP.md) · [Design no Figma](https://www.figma.com/design/Rau8PgbGwiiJwRo9MHgzMW/Comandas?node-id=0-1) · [Abrir protótipo](https://www.figma.com/proto/Rau8PgbGwiiJwRo9MHgzMW/Comandas?page-id=0%3A1&node-id=12-2&starting-point-node-id=12%3A2) · [Roadmap](ROADMAP.md) · [Issues](https://github.com/gustavonm20/Sistema-de-comandas/issues) · [Kanban existente](https://github.com/users/gustavonm20/projects/2/views/4)
 
-> **Em consolidação para uso local e estudo.** O código web recuperado está nesta branch para revisão. A [CI com MySQL real](https://github.com/gustavonm20/Sistema-de-comandas/actions/runs/35213699602) passou: 36 testes da aplicação e seis do terminal histórico. Login, proteção CSRF, migrations e segurança sob concorrência ainda precisam de trabalho. Consulte a [matriz de evidências](docs/STATUS.md) antes de considerar uma funcionalidade concluída.
+> **Em consolidação para uso local e estudo.** O código web recuperado está na [PR #25](https://github.com/gustavonm20/Sistema-de-comandas/pull/25) para revisão. A [CI com MySQL real](https://github.com/gustavonm20/Sistema-de-comandas/actions/runs/35213699602) passou: 36 testes da aplicação e seis do terminal histórico. Login, proteção CSRF, migrations e segurança sob concorrência ainda precisam de trabalho. Consulte a [matriz de evidências](docs/STATUS.md) antes de considerar uma funcionalidade concluída.
 
 ## Uma operação mais fácil de acompanhar
 

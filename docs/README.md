@@ -21,4 +21,4 @@ Comece pela instalação para executar o código e pela matriz de status para en
 
 [Roadmap](../ROADMAP.md) · [Contribuição](../CONTRIBUTING.md) · [Changelog](../CHANGELOG.md)
 
-Os documentos descrevem a entrega na branch `chore/consolidar-fluxopag`; sua presença não significa que a mudança foi integrada à `main`. A revisão foi realizada em **17/09/2026**.
+Os documentos descrevem o código da `main`, consolidado pela [PR #25](https://github.com/gustavonm20/Sistema-de-comandas/pull/25). A organização foi finalizada em **18/09/2026**. Funcionalidades pendentes continuam identificadas na matriz de evidências; a integração não significa que todo o roadmap foi implementado.

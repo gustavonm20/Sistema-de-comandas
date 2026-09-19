@@ -22,7 +22,7 @@ Não foram encontrados milestones na consulta pública da revisão. As nove labe
 | Em revisão | Código/documento entregue e aguardando aceitação | Critérios satisfeitos e integração ou aceitação explícita |
 | Concluído | Entrega aceita com evidência | Reabrir apenas se houver regressão/escopo justificável |
 
-Uma PR aberta não encerra automaticamente uma issue. Duplicada, cancelada e substituída não significam funcionalidade concluída. A #4 permanece fechada como duplicada da #2, fora das métricas de entrega. PRs #18, #22 e #23 foram integradas e são histórico concluído, sem tornar o escopo atual das issues automaticamente pronto.
+Uma PR aberta não encerra automaticamente uma issue. Duplicada, cancelada e substituída não significam funcionalidade concluída. A #4 permanece fechada como duplicada da #2, fora das métricas de entrega. PRs #18, #22, #23 e #25 foram integradas e são histórico concluído, sem tornar o escopo atual das issues automaticamente pronto.
 
 ## Configuração exata pendente
 
@@ -31,7 +31,7 @@ Uma PR aberta não encerra automaticamente uma issue. Duplicada, cancelada e sub
 3. Reutilizar ou criar `Prioridade` com **Alta, Normal** e `Área` com **Produto, Design, Aplicação, Dados, Qualidade**, se esses campos trouxerem filtros úteis. Preferir o campo de milestone das issues a um campo duplicado.
 4. Criar/reutilizar os milestones **Base consolidada**, **Atendimento e caixa**, **Interface e resumos**, **Qualidade e acesso**, **Extensões posteriores**, sem prazo. Atribuir conforme a tabela.
 5. Adicionar as issues reais abaixo somente se ainda não forem itens. Preencher status, prioridade e área; conferir a evidência antes de movimentar.
-6. Vincular a [PR #25](https://github.com/gustavonm20/Sistema-de-comandas/pull/25), da branch `chore/consolidar-fluxopag`, e deixá-la **Em revisão**; após merge autorizado, rever cada critério individualmente. Preservar os itens históricos das PRs #18/#22/#23, quando já presentes.
+6. Vincular a [PR #25](https://github.com/gustavonm20/Sistema-de-comandas/pull/25) e marcar seu item como **Concluído**: a integração à `main` foi confirmada em 17/09/2026. Manter as issues de funcionalidades nos estados da tabela até satisfazer seus próprios critérios. Preservar os itens históricos das PRs #18/#22/#23, quando já presentes.
 7. Para labels de área/prioridade, preferir os campos do Projects. Se filtros no repositório exigirem labels, criar apenas as correspondentes necessárias; não duplicar toda a taxonomia sem necessidade.
 
 | Issue | Status proposto | Prioridade | Área | Milestone proposto | Label aplicada |
@@ -57,7 +57,7 @@ Uma PR aberta não encerra automaticamente uma issue. Duplicada, cancelada e sub
 | [#21](https://github.com/gustavonm20/Sistema-de-comandas/issues/21) | A fazer | alta | dados | Atendimento e caixa | `bug` |
 | [#24](https://github.com/gustavonm20/Sistema-de-comandas/issues/24) | Backlog | alta | aplicação | Qualidade e acesso | `enhancement` |
 
-Não há trabalho marcado como Em andamento só por existir no plano. #3 e #11 aguardam revisão da entrega; as demais questões ainda têm lacunas relevantes. A PR de consolidação não substitui esses itens.
+Não há trabalho marcado como Em andamento só por existir no plano. O código de #3 e #11 está na `main`, mas ainda há revisão manual de ambiente/interface nos seus critérios; as demais questões também têm lacunas relevantes. A PR de consolidação não substitui esses itens.
 
 ## Metadados do repositório pendentes
 

@@ -8,7 +8,7 @@
 - MySQL Server 8.0.16+ (necessário para aplicar `CHECK`), preferencialmente 8.4, e um usuário autorizado a criar a estrutura inicial.
 - Git. MySQL Workbench é opcional; ele não substitui o servidor.
 
-A versão web está na branch `chore/consolidar-fluxopag`, proposta para revisão. Não existe implantação desta versão documentada como produção. Execute em `127.0.0.1`: autenticação e proteção CSRF ainda estão na [issue #24](https://github.com/gustavonm20/Sistema-de-comandas/issues/24).
+A versão web está na branch principal `main`, com os fontes e a configuração descritos neste guia. Não existe implantação desta versão documentada como produção. Execute em `127.0.0.1`: autenticação e proteção CSRF ainda estão na [issue #24](https://github.com/gustavonm20/Sistema-de-comandas/issues/24).
 
 ## Preparar o projeto no Windows
 
@@ -17,7 +17,6 @@ No PowerShell:
 ```powershell
 git clone https://github.com/gustavonm20/Sistema-de-comandas.git
 cd Sistema-de-comandas
-git switch chore/consolidar-fluxopag
 py -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt

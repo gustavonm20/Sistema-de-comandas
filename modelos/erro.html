@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erro — FluxoPag</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+</head>
+<body class="pagina-centralizada">
+    <section class="cartao-isolado">
+        <h1>Não foi possível concluir</h1>
+        <p>{{ mensagem }}</p>
+        <a class="botao primario" href="{{ url_for('painel') }}">Voltar ao Painel</a>
+    </section>
+</body>
+</html>

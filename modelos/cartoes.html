@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block titulo %}Cartões de comanda — FluxoPag{% endblock %}
+
+{% block conteudo %}
+<div class="cabecalho-pagina">
+    <div>
+        <a class="ligacao-voltar" href="{{ url_for('pedidos') }}">← Voltar para comandas</a>
+        <h1>Cartões de comanda</h1>
+        <p>Os números possuem quatro dígitos e voltam a ficar disponíveis após o pagamento.</p>
+    </div>
+</div>
+
+<form class="painel painel-compacto formulario-novo-cartao" method="post">
+    <label>
+        <span>Número do novo cartão</span>
+        <input type="text" name="numero_cartao" inputmode="numeric" pattern="[0-9]{4}"
+               minlength="4" maxlength="4" placeholder="Ex.: 0021" required>
+    </label>
+    <button class="botao primario" type="submit">Adicionar cartão</button>
+</form>
+
+<nav class="abas-arredondadas" aria-label="Filtrar cartões">
+    <a class="{{ 'ativo' if situacao_selecionada == 'todos' else '' }}" href="{{ url_for('cartoes') }}">Todos</a>
+    <a class="{{ 'ativo' if situacao_selecionada == 'disponivel' else '' }}" href="{{ url_for('cartoes', situacao='disponivel') }}">Disponíveis</a>
+    <a class="{{ 'ativo' if situacao_selecionada == 'aberto' else '' }}" href="{{ url_for('cartoes', situacao='aberto') }}">Em uso</a>
+    <a class="{{ 'ativo' if situacao_selecionada == 'inativo' else '' }}" href="{{ url_for('cartoes', situacao='inativo') }}">Desativados</a>
+</nav>
+
+<section class="painel">
+    {% if cartoes %}
+        <div class="envoltorio-tabela">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cartão</th>
+                        <th>Situação</th>
+                        <th>Atendimento atual</th>
+                        <th class="alinhar-direita">Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cartao in cartoes %}
+                        <tr>
+                            <td><strong>#{{ cartao.numero_cartao }}</strong></td>
+                            <td>
+                                {% if not cartao.ativo %}
+                                    <span class="etiqueta-situacao neutro">Desativado</span>
+                                {% elif cartao.id_pedido %}
+                                    <span class="etiqueta-situacao alerta">Em uso</span>
+                                {% else %}
+                                    <span class="etiqueta-situacao sucesso">Disponível</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if cartao.id_pedido %}
+                                    <a class="ligacao-tabela" href="{{ url_for('detalhes_pedido', id_pedido=cartao.id_pedido) }}">
+                                        {{ cartao.identificacao_atendimento }} • {{ formatar_valor(cartao.total) }}
+                                    </a>
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+                            <td class="alinhar-direita acoes">
+                                <form method="post" action="{{ url_for('situacao_cartao', id_cartao=cartao.id_cartao) }}"
+                                      {% if cartao.ativo %}data-confirmacao="Desativar o cartão #{{ cartao.numero_cartao }}?"{% endif %}>
+                                    <input type="hidden" name="ativo" value="{{ 'false' if cartao.ativo else 'true' }}">
+                                    <button class="botao-texto {{ 'perigo' if cartao.ativo else '' }}" type="submit"
+                                            {{ 'disabled' if cartao.id_pedido else '' }}>
+                                        {{ 'Desativar' if cartao.ativo else 'Ativar' }}
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="estado-vazio">
+            <h3>Nenhum cartão nesse filtro</h3>
+            <p>Escolha outra situação ou adicione um cartão.</p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

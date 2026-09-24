@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block titulo %}Comanda #{{ pedido.numero_cartao }} — FluxoPag{% endblock %}
+
+{% block conteudo %}
+<div class="cabecalho-pagina">
+    <div>
+        <a class="ligacao-voltar" href="{{ url_for('pedidos') }}">← Voltar para comandas</a>
+        <div class="titulo-com-situacao">
+            <h1>Comanda #{{ pedido.numero_cartao }}</h1>
+            <span class="etiqueta-situacao {{ 'sucesso' if pedido.situacao == 'aberto' else 'neutro' }}">
+                {{ 'Aberta' if pedido.situacao == 'aberto' else 'Fechada' }}
+            </span>
+        </div>
+        <p>{{ pedido.identificacao_atendimento }} • aberta em {{ formatar_data_hora(pedido.aberto_em) }}</p>
+    </div>
+    {% if pedido.situacao == 'aberto' and pedido['itens'] %}
+        <a class="botao primario" href="{{ url_for('pagamento', id_pedido=pedido.id_pedido) }}">Ir para pagamento</a>
+    {% endif %}
+</div>
+
+{% if pedido.observacao %}
+    <div class="aviso"><strong>Observação:</strong> {{ pedido.observacao }}</div>
+{% endif %}
+
+<div class="grade-conteudo grade-detalhes-pedido">
+    <section class="painel">
+        <div class="cabecalho-painel">
+            <div>
+                <h2>Itens da comanda</h2>
+                <span>{{ pedido.quantidade_itens }} {{ 'item' if pedido.quantidade_itens == 1 else 'itens' }}</span>
+            </div>
+        </div>
+
+        {% if pedido['itens'] %}
+            <div class="lista-itens-pedido">
+                {% for item in pedido['itens'] %}
+                    <article class="item-pedido">
+                        <div class="descricao-item-pedido">
+                            <strong>{{ item.nome_produto_historico }}</strong>
+                            <small>{{ item.nome_categoria_historico }} • {{ formatar_valor(item.preco_unitario) }} cada</small>
+                        </div>
+                        {% if pedido.situacao == 'aberto' %}
+                            <form class="formulario-quantidade" method="post"
+                                  action="{{ url_for('atualizar_item_rota', id_pedido=pedido.id_pedido, id_item=item.id_item) }}">
+                                <label class="apenas-leitor-tela" for="quantity-{{ item.id_item }}">Quantidade</label>
+                                <input id="quantity-{{ item.id_item }}" type="number" name="quantidade"
+                                       min="1" max="99" value="{{ item.quantidade }}" required>
+                                <button class="botao-texto" type="submit">Atualizar</button>
+                            </form>
+                        {% else %}
+                            <span>{{ item.quantidade }} un.</span>
+                        {% endif %}
+                        <strong class="total-linha">{{ formatar_valor(item.total_item) }}</strong>
+                        {% if pedido.situacao == 'aberto' %}
+                            <form method="post"
+                                  action="{{ url_for('remover_item_rota', id_pedido=pedido.id_pedido, id_item=item.id_item) }}"
+                                  data-confirmacao="Remover este produto da comanda?">
+                                <button class="botao-icone botao-perigo" type="submit" aria-label="Remover produto">×</button>
+                            </form>
+                        {% endif %}
+                    </article>
+                {% endfor %}
+            </div>
+
+            <div class="resumo-pedido">
+                <span>Total da comanda</span>
+                <strong>{{ formatar_valor(pedido.total) }}</strong>
+            </div>
+        {% else %}
+            <div class="estado-vazio vazio-pequeno">
+                <h3>A comanda ainda está vazia</h3>
+                <p>Adicione o primeiro produto pelo catálogo ao lado.</p>
+            </div>
+        {% endif %}
+    </section>
+
+    {% if pedido.situacao == 'aberto' %}
+        <section class="painel catalogo-produtos">
+            <div class="cabecalho-painel">
+                <div>
+                    <h2>Adicionar produtos</h2>
+                    <span>Catálogo de itens ativos</span>
+                </div>
+            </div>
+
+            <form class="busca-em-linha" method="get">
+                <label class="apenas-leitor-tela" for="product-search">Pesquisar produto</label>
+                <input id="product-search" type="search" name="busca_produto"
+                       value="{{ busca_produto }}" placeholder="Pesquisar produto">
+                <button class="botao secundario" type="submit">Buscar</button>
+            </form>
+
+            {% if produtos %}
+                <div class="lista-catalogo">
+                    {% for produto in produtos %}
+                        <article class="item-catalogo">
+                            <div>
+                                <strong>{{ produto.nome }}</strong>
+                                <small>{{ produto.nome_categoria }}</small>
+                            </div>
+                            <span>{{ formatar_valor(produto.preco) }}</span>
+                            <form method="post" action="{{ url_for('adicionar_item_rota', id_pedido=pedido.id_pedido) }}">
+                                <input type="hidden" name="id_produto" value="{{ produto.id_produto }}">
+                                <input type="hidden" name="quantidade" value="1">
+                                <button class="botao botao-pequeno" type="submit">Adicionar</button>
+                            </form>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="estado-vazio vazio-pequeno">
+                    <h3>Nenhum produto encontrado</h3>
+                    <p>Revise a pesquisa ou cadastre um produto.</p>
+                </div>
+            {% endif %}
+        </section>
+    {% endif %}
+</div>
+
+{% if pedido.situacao == 'aberto' and pedido['itens'] %}
+    <div class="acao-inferior-celular">
+        <a class="botao primario" href="{{ url_for('pagamento', id_pedido=pedido.id_pedido) }}">
+            Finalizar • {{ formatar_valor(pedido.total) }}
+        </a>
+    </div>
+{% endif %}
+{% endblock %}

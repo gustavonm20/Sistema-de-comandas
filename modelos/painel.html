@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block titulo %}Painel — FluxoPag{% endblock %}
+
+{% block conteudo %}
+<div class="cabecalho-pagina">
+    <div>
+        <h1>Painel</h1>
+        <p>Acompanhe o movimento atual do estabelecimento.</p>
+    </div>
+    <a class="botao primario" href="{{ url_for('criar_pedido_rota') }}">＋ Nova comanda</a>
+</div>
+
+<section class="grade-indicadores">
+    <article class="cartao-indicador primary-tone">
+        <span>Comandas abertas</span>
+        <strong>{{ painel.indicadores.pedidos_abertos }}</strong>
+    </article>
+    <article class="cartao-indicador tom-verde">
+        <span>Vendas realizadas hoje</span>
+        <strong>{{ painel.indicadores.vendas_concluidas }}</strong>
+    </article>
+    <article class="cartao-indicador tom-laranja">
+        <span>Faturamento de hoje</span>
+        <strong>{{ formatar_valor(painel.indicadores.faturamento) }}</strong>
+    </article>
+    <article class="cartao-indicador tom-azul">
+        <span>Ticket médio</span>
+        <strong>{{ formatar_valor(painel.indicadores.valor_medio_venda) }}</strong>
+    </article>
+</section>
+
+<div class="grade-conteudo grade-painel">
+    <section class="painel">
+        <div class="cabecalho-painel">
+            <h2>Comandas recentes</h2>
+            <a href="{{ url_for('pedidos') }}">Ver todas</a>
+        </div>
+
+        {% if painel.ultimos_pedidos %}
+            <div class="envoltorio-tabela">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Comanda</th>
+                            <th>Atendimento</th>
+                            <th>Abertura</th>
+                            <th class="alinhar-direita">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pedido in painel.ultimos_pedidos %}
+                            <tr class="linha-clicavel" data-endereco="{{ url_for('detalhes_pedido', id_pedido=pedido.id_pedido) }}">
+                                <td><strong>#{{ pedido.numero_cartao }}</strong></td>
+                                <td>{{ pedido.identificacao_atendimento }}</td>
+                                <td>{{ formatar_data_hora(pedido.aberto_em) }}</td>
+                                <td class="alinhar-direita">{{ formatar_valor(pedido.total) }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="estado-vazio">
+                <h3>Nenhuma comanda aberta</h3>
+                <p>Abra uma comanda para iniciar o atendimento.</p>
+                <a class="botao secundario" href="{{ url_for('criar_pedido_rota') }}">Abrir primeira comanda</a>
+            </div>
+        {% endif %}
+    </section>
+
+    <section class="painel">
+        <div class="cabecalho-painel">
+            <h2>Vendas por hora</h2>
+            <span>Hoje</span>
+        </div>
+        <div class="grafico-barras" aria-label="Gráfico do faturamento por hora">
+            {% for item in painel.evolucao %}
+                <div class="coluna-barra">
+                    <div class="trilha-barra">
+                        <div class="valor-barra" style="height: {{ item.altura }}%" title="{{ formatar_valor(item.valor) }}"></div>
+                    </div>
+                    <small>{{ item.rotulo }}</small>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

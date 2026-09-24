@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block titulo %}Histórico — FluxoPag{% endblock %}
+
+{% block conteudo %}
+<div class="cabecalho-pagina">
+    <div>
+        <h1>Histórico</h1>
+        <p>Consulte as vendas finalizadas e os pagamentos recebidos.</p>
+    </div>
+</div>
+
+<form class="filtros painel painel-compacto filtros-historico" method="get">
+    <label>
+        <span>Venda ou comanda</span>
+        <input type="search" name="busca" value="{{ filtros.busca }}" placeholder="Ex.: 15 ou 0004">
+    </label>
+    <label>
+        <span>Pagamento</span>
+        <select name="forma_pagamento">
+            <option value="todos" {{ 'selected' if filtros.forma_pagamento == 'todos' else '' }}>Todos</option>
+            <option value="dinheiro" {{ 'selected' if filtros.forma_pagamento == 'dinheiro' else '' }}>Dinheiro</option>
+            <option value="pix" {{ 'selected' if filtros.forma_pagamento == 'pix' else '' }}>Pix</option>
+            <option value="debito" {{ 'selected' if filtros.forma_pagamento == 'debito' else '' }}>Débito</option>
+            <option value="credito" {{ 'selected' if filtros.forma_pagamento == 'credito' else '' }}>Crédito</option>
+        </select>
+    </label>
+    <label>
+        <span>De</span>
+        <input type="date" name="data_inicial" value="{{ filtros.data_inicial }}">
+    </label>
+    <label>
+        <span>Até</span>
+        <input type="date" name="data_final" value="{{ filtros.data_final }}">
+    </label>
+    <button class="botao secundario" type="submit">Aplicar filtros</button>
+</form>
+
+<section class="painel">
+    {% if vendas %}
+        <div class="envoltorio-tabela">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Venda</th>
+                        <th>Comanda</th>
+                        <th>Atendimento</th>
+                        <th>Pagamento</th>
+                        <th>Data e hora</th>
+                        <th class="alinhar-direita">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for venda in vendas %}
+                        <tr class="linha-clicavel" data-endereco="{{ url_for('detalhes_venda', id_venda=venda.id_venda) }}">
+                            <td><strong>#{{ venda.id_venda }}</strong></td>
+                            <td>#{{ venda.numero_cartao_historico }}</td>
+                            <td>{{ venda.identificacao_atendimento }}</td>
+                            <td>{{ nome_pagamento(venda.forma_pagamento) }}</td>
+                            <td>{{ formatar_data_hora(venda.vendido_em) }}</td>
+                            <td class="alinhar-direita"><strong>{{ formatar_valor(venda.valor_total) }}</strong></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="estado-vazio">
+            <h3>Nenhuma venda encontrada</h3>
+            <p>As comandas pagas aparecerão neste histórico.</p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block titulo %}Resumos — FluxoPag{% endblock %}
+
+{% block conteudo %}
+<div class="cabecalho-pagina">
+    <div>
+        <h1>Resumos</h1>
+        <p>Visualize os resultados do dia, da semana ou do mês.</p>
+    </div>
+</div>
+
+<nav class="abas-arredondadas abas-resumo" aria-label="Período do resumo">
+    <a class="{{ 'ativo' if resumo.periodo == 'diario' else '' }}" href="{{ url_for('resumos', periodo='diario') }}">Dia</a>
+    <a class="{{ 'ativo' if resumo.periodo == 'semanal' else '' }}" href="{{ url_for('resumos', periodo='semanal') }}">Semana</a>
+    <a class="{{ 'ativo' if resumo.periodo == 'mensal' else '' }}" href="{{ url_for('resumos', periodo='mensal') }}">Mês</a>
+</nav>
+
+<section class="grade-indicadores indicadores-resumo">
+    <article class="cartao-indicador tom-laranja">
+        <span>Faturamento • {{ resumo.rotulo }}</span>
+        <strong>{{ formatar_valor(resumo.indicadores.faturamento) }}</strong>
+        {% if resumo.comparacao is not none %}
+            <small class="comparacao {{ 'positivo' if resumo.comparacao >= 0 else 'negativo' }}">
+                {{ '+' if resumo.comparacao >= 0 else '' }}{{ '%.1f'|format(resumo.comparacao) }}% em relação ao período anterior
+            </small>
+        {% else %}
+            <small>Sem período anterior para comparar</small>
+        {% endif %}
+    </article>
+    <article class="cartao-indicador tom-verde">
+        <span>Vendas concluídas</span>
+        <strong>{{ resumo.indicadores.vendas_concluidas }}</strong>
+    </article>
+    <article class="cartao-indicador tom-azul">
+        <span>Ticket médio</span>
+        <strong>{{ formatar_valor(resumo.indicadores.valor_medio_venda) }}</strong>
+    </article>
+</section>
+
+<div class="grade-conteudo grade-resumo">
+    <section class="painel painel-grafico-resumo">
+        <div class="cabecalho-painel">
+            <h2>Evolução das vendas</h2>
+            <span>{{ resumo.rotulo }}</span>
+        </div>
+        {% if resumo.evolucao %}
+            <div class="grafico-barras grafico-resumo" aria-label="Faturamento no período">
+                {% for item in resumo.evolucao %}
+                    <div class="coluna-barra">
+                        <div class="trilha-barra">
+                            <div class="valor-barra" style="height: {{ item.altura if item.altura > 3 else 3 }}%"
+                                 title="{{ item.vendas }} vendas • {{ formatar_valor(item.faturamento) }}"></div>
+                        </div>
+                        <small>{{ item.rotulo }}</small>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="estado-vazio vazio-pequeno">
+                <h3>Sem vendas nesse período</h3>
+                <p>O gráfico aparecerá após o primeiro pagamento.</p>
+            </div>
+        {% endif %}
+    </section>
+
+    <section class="painel">
+        <div class="cabecalho-painel"><h2>Formas de pagamento</h2></div>
+        {% if resumo.formas_pagamento %}
+            <div class="lista-classificada">
+                {% for metodo in resumo.formas_pagamento %}
+                    <div>
+                        <span><strong>{{ nome_pagamento(metodo.forma_pagamento) }}</strong><small>{{ metodo.vendas }} vendas</small></span>
+                        <strong>{{ formatar_valor(metodo.faturamento) }}</strong>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="texto-discreto">Nenhum pagamento registrado.</p>
+        {% endif %}
+    </section>
+
+    <section class="painel">
+        <div class="cabecalho-painel"><h2>Produtos mais vendidos</h2></div>
+        {% if resumo.produtos_mais_vendidos %}
+            <ol class="lista-classificada lista-numerada">
+                {% for produto in resumo.produtos_mais_vendidos %}
+                    <li>
+                        <span><strong>{{ produto.nome }}</strong><small>{{ produto.quantidade }} unidades</small></span>
+                        <strong>{{ formatar_valor(produto.faturamento) }}</strong>
+                    </li>
+                {% endfor %}
+            </ol>
+        {% else %}
+            <p class="texto-discreto">Nenhum produto vendido.</p>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}
